@@ -10,7 +10,8 @@ def build_environment(gridsize = 999):
     d = 9 
     num_tunnels = gridsize//9 
     world[:, constraint_zone[0]:constraint_zone[1]] = 1
-    return world, start_x, start_y, goal_x, goal_y, intermdiate_goal_zone, constraint_zone, tunnel_width, d, num_tunnels
+    tunnel = np.zeros((tunnel_width, constraint_zone[1] - constraint_zone[0]))
+    return world, start_x, start_y, goal_x, goal_y, intermdiate_goal_zone, constraint_zone, tunnel_width, d, num_tunnels, tunnel
 
 def plot_environment(world, start_x, start_y, goal_x, goal_y, intermdiate_goal_zone, constraint_zone):
     plt.imshow(world, cmap='gray', origin='lower')
@@ -24,5 +25,5 @@ def plot_environment(world, start_x, start_y, goal_x, goal_y, intermdiate_goal_z
     plt.ylabel('Y-axis')
     plt.show()
 
-world, start_x, start_y, goal_x, goal_y, intermdiate_goal_zone, constraint_zone, tunnel_width, d, num_tunnels = build_environment()
+world, start_x, start_y, goal_x, goal_y, intermdiate_goal_zone, constraint_zone, tunnel_width, d, num_tunnels, tunnel = build_environment()
 plot_environment(world, start_x, start_y, goal_x, goal_y, intermdiate_goal_zone, constraint_zone)
