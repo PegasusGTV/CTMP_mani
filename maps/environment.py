@@ -11,7 +11,8 @@ def build_environment(gridsize = 999):
     d = 9 
     num_tunnels = gridsize//9 
     world[:, constraint_zone[0]:constraint_zone[1]] = 1
-    tunnel = np.zeros((tunnel_width, constraint_zone[1] - constraint_zone[0]))
+    # tunnel = np.zeros((tunnel_width, constraint_zone[1] - constraint_zone[0]))
+    tunnel = [(x, 0) for x in range(constraint_zone[1] - constraint_zone[0] + 1)]
     return world, start_x, start_y, goal_x, goal_y, intermdiate_goal_zone, constraint_zone, tunnel_width, d, num_tunnels, tunnel
 
 def plot_environment(world, start_x, start_y, goal_x, goal_y, intermdiate_goal_zone, constraint_zone):
@@ -29,7 +30,7 @@ def plot_environment(world, start_x, start_y, goal_x, goal_y, intermdiate_goal_z
 world, start_x, start_y, goal_x, goal_y, intermdiate_goal_zone, constraint_zone, tunnel_width, d, num_tunnels, tunnel = build_environment()
 plot_environment(world, start_x, start_y, goal_x, goal_y, intermdiate_goal_zone, constraint_zone)
 
-np.savetxt("map.txt", world, fmt='%d')
+np.savetxt("maps/map.txt", world, fmt='%d')
 meta = {
     "start": [start_x, start_y],
     "goal": [goal_x, goal_y],
@@ -38,7 +39,7 @@ meta = {
     "tunnel_width": tunnel_width,
     "d": d,
     "num_tunnels": num_tunnels,
-    "tunnel_shape": tunnel.tolist()  
+    "tunnel_shape": tunnel 
 }
-with open("map_meta.json", "w") as f:
+with open("maps/map_meta.json", "w") as f:
     json.dump(meta, f, indent=4)
