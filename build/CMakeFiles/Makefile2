@@ -81,12 +81,12 @@ clean: CMakeFiles/ctmp_mani.dir/clean
 CMakeFiles/ctmp_mani.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ctmp_mani.dir/build.make CMakeFiles/ctmp_mani.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ctmp_mani.dir/build.make CMakeFiles/ctmp_mani.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/gopal/Desktop/files/sbpl/CTMP_mani/build/CMakeFiles --progress-num=1,2,3 "Built target ctmp_mani"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/gopal/Desktop/files/sbpl/CTMP_mani/build/CMakeFiles --progress-num=1,2,3,4 "Built target ctmp_mani"
 .PHONY : CMakeFiles/ctmp_mani.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ctmp_mani.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/gopal/Desktop/files/sbpl/CTMP_mani/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/gopal/Desktop/files/sbpl/CTMP_mani/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/ctmp_mani.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/gopal/Desktop/files/sbpl/CTMP_mani/build/CMakeFiles 0
 .PHONY : CMakeFiles/ctmp_mani.dir/rule

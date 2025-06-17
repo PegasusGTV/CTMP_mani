@@ -177,6 +177,30 @@ src/load_map_preprocessing.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ctmp_mani.dir/build.make CMakeFiles/ctmp_mani.dir/src/load_map_preprocessing.cpp.s
 .PHONY : src/load_map_preprocessing.cpp.s
 
+src/test_map.o: src/test_map.cpp.o
+.PHONY : src/test_map.o
+
+# target to build an object file
+src/test_map.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ctmp_mani.dir/build.make CMakeFiles/ctmp_mani.dir/src/test_map.cpp.o
+.PHONY : src/test_map.cpp.o
+
+src/test_map.i: src/test_map.cpp.i
+.PHONY : src/test_map.i
+
+# target to preprocess a source file
+src/test_map.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ctmp_mani.dir/build.make CMakeFiles/ctmp_mani.dir/src/test_map.cpp.i
+.PHONY : src/test_map.cpp.i
+
+src/test_map.s: src/test_map.cpp.s
+.PHONY : src/test_map.s
+
+# target to generate assembly for a file
+src/test_map.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ctmp_mani.dir/build.make CMakeFiles/ctmp_mani.dir/src/test_map.cpp.s
+.PHONY : src/test_map.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,6 +216,9 @@ help:
 	@echo "... src/load_map_preprocessing.o"
 	@echo "... src/load_map_preprocessing.i"
 	@echo "... src/load_map_preprocessing.s"
+	@echo "... src/test_map.o"
+	@echo "... src/test_map.i"
+	@echo "... src/test_map.s"
 .PHONY : help
 
 

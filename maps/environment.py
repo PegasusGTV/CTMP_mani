@@ -39,7 +39,7 @@ meta = {
     "tunnel_width": tunnel_width,
     "d": d,
     "num_tunnels": num_tunnels,
-    "tunnel_shape": tunnel 
+    "tunnel_path": tunnel 
 }
 with open("maps/map_meta.json", "w") as f:
     json.dump(meta, f, indent=4)
