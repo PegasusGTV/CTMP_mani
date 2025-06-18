@@ -62,9 +62,26 @@ public:
 
     }
 
+    void groupTunnels(){
+        num_tunnel_groups = num_tunnels / num_tunnels_in_group;
+        int ids = 0;
+        for(int i = 0; i < num_tunnel_groups; ++i) {
+            TunnelGroup group;
+            group.id = ids++;
+            for(int j = 0; j < num_tunnels_in_group; ++j) {
+                group.Tunnels.push_back(tunnels_[i * num_tunnels_in_group + j]);
+            }
+            group.representative = group.Tunnels[static_cast<int>(num_tunnels_in_group/2) + 1];
+            tunnel_groups_[group.id] = group;
+        }
+    }
+
 private:
     const Map& map_;
     std::vector<Tunnel> tunnels_;
     int num_tunnels_in_group;
     int num_tunnels;
+    std::unordered_map<int, TunnelGroup> tunnel_groups_;
+    int num_tunnel_groups;
+
 };
