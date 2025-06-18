@@ -86,13 +86,6 @@ public:
         for (const auto& group : tunnel_groups_) {
             Path_to_solve_tunnel_constraints path;
             path.id = ids++;
-            // Here you would implement the logic to find a path that solves the tunnel constraints
-            // For now, we will just create a dummy path
-            // for (const auto& tunnel : group.second.Tunnels) {
-            //     for (const auto& point : tunnel.points) {
-            //         path.path.push_back(point);
-            //     }
-            // }
             int x_start = group.second.representative.start.x;
             int y_start = group.second.representative.start.y;
             std::vector<std::pair<int, int>> tunnel_path = map_.tunnel_path;
@@ -103,6 +96,15 @@ public:
         }
     }
 
+    bool saveTunnelsToFile(const std::string& filename) const {
+        std::ofstream out{filename, std::ios::binary};
+        if (!out) {
+            std::cerr << "Error opening file for writing: " << filename << std::endl;
+            return false;
+        }   
+    }
+
+
 private:
     const Map& map_;
     std::vector<Tunnel> tunnels_;
@@ -111,5 +113,4 @@ private:
     std::unordered_map<int, TunnelGroup> tunnel_groups_;
     int num_tunnel_groups;
     std::unordered_map<int, Path_to_solve_tunnel_constraints> paths_to_solve_tunnel_constraints_;
-
 };
