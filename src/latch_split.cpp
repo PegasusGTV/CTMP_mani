@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <functional>
+#include <algorithm>
 
 struct Point {
     int x, y;
@@ -101,7 +102,142 @@ public:
         if (!out) {
             std::cerr << "Error opening file for writing: " << filename << std::endl;
             return false;
-        }   
+        }
+        
+        auto write = [&](auto &v){
+            out.write(reinterpret_cast<const char*>(&v), sizeof(v));
+        };
+
+        int32_t G = int32_t(tunnel_groups_.size());
+        write(G);
+
+        for(auto const &kv : tunnel_groups_){
+            auto const &group = kv.second;
+
+            int32_t gid = int32_t(group.id);
+            write(gid);
+
+            int32_t T = int32_t(group.Tunnels.size());
+            write(T);
+
+            for(auto const &tun : group.Tunnels){
+                int32_t tid = int32_t(tun.id);
+                write(tid);
+
+                int32_t P = int32_t(tun.points.size());
+                write(P);
+
+                for(const auto &point : tun.points){
+                    write(point.x);
+                    write(point.y);
+                }
+
+                write(tun.start.x);
+                write(tun.start.y);
+            }
+
+            int32_t rep_id = int32_t(group.representative.id);
+            write(rep_id);
+        }
+
+        int32_t P = int32_t(paths_to_solve_tunnel_constraints_.size());
+        write(P);
+        for(auto const &kv : paths_to_solve_tunnel_constraints_){
+            auto const &path = kv.second;
+
+            int32_t pid = int32_t(path.id);
+            write(pid);
+
+            int32_t L = int32_t(path.path.size());
+            write(L);
+
+            for(const auto &point : path.path){
+                write(point.x);
+                write(point.y);
+            }
+        }
+
+        out.close();
+        return !out.fail();
+
+    }
+
+    bool loadTunnelsFromFile(const std::string& filename) {
+        std::ifstream in{filename, std::ios::binary};
+        if (!in) {
+            std::cerr << "Error opening file for reading: " << filename << std::endl;
+            return false;
+        }
+        // helper to read POD types
+        auto read = [&](auto &v){
+            in.read(reinterpret_cast<char*>(&v), sizeof(v));
+        };
+    
+        // clear existing
+        tunnel_groups_.clear();
+        paths_to_solve_tunnel_constraints_.clear();
+    
+        // 1) number of groups
+        int32_t G;
+        read(G);
+        for(int gi=0; gi<G; ++gi){
+            TunnelGroup group;
+            // group id
+            read(group.id);
+            // number of tunnels in this group
+            int32_t T;
+            read(T);
+            group.Tunnels.reserve(T);
+    
+            // read each Tunnel
+            for(int ti=0; ti<T; ++ti){
+                Tunnel t;
+                read(t.id);
+                int32_t P;
+                read(P);
+                t.points.resize(P);
+                for(int pi=0; pi<P; ++pi){
+                    read(t.points[pi].x);
+                    read(t.points[pi].y);
+                }
+                read(t.start.x);
+                read(t.start.y);
+                group.Tunnels.push_back(std::move(t));
+            }
+    
+            // read representative tunnel id, then find it in the just-read list
+            int32_t rep_id;
+            read(rep_id);
+            auto it = std::find_if(group.Tunnels.begin(),
+                                   group.Tunnels.end(),
+                                   [&](auto &tun){ return tun.id == rep_id; });
+            if(it == group.Tunnels.end()){
+                std::cerr << "Corrupt file: representative id " << rep_id
+                          << " not in group " << group.id << std::endl;
+                return false;
+            }
+            group.representative = *it;
+    
+            tunnel_groups_.emplace(group.id, std::move(group));
+        }
+    
+        // 2) number of paths
+        int32_t P;
+        read(P);
+        for(int pi=0; pi<P; ++pi){
+            Path_to_solve_tunnel_constraints path;
+            read(path.id);
+            int32_t L;
+            read(L);
+            path.path.resize(L);
+            for(int i=0; i<L; ++i){
+                read(path.path[i].x);
+                read(path.path[i].y);
+            }
+            paths_to_solve_tunnel_constraints_.emplace(path.id, std::move(path));
+        }
+    
+        return !in.fail();
     }
 
 
