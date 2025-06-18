@@ -33,6 +33,11 @@ struct TunnelGroup{
     Tunnel representative;
 };
 
+struct Path_to_solve_tunnel_constraints{
+    int id;
+    std::vector<Point> path;
+};
+
 class TunnelPreprocessor {
 public:
     TunnelPreprocessor(const Map& map) : map_(map) {}
@@ -76,6 +81,28 @@ public:
         }
     }
 
+    void solveTunnelConstraints() {
+        int ids = 0;
+        for (const auto& group : tunnel_groups_) {
+            Path_to_solve_tunnel_constraints path;
+            path.id = ids++;
+            // Here you would implement the logic to find a path that solves the tunnel constraints
+            // For now, we will just create a dummy path
+            // for (const auto& tunnel : group.second.Tunnels) {
+            //     for (const auto& point : tunnel.points) {
+            //         path.path.push_back(point);
+            //     }
+            // }
+            int x_start = group.second.representative.start.x;
+            int y_start = group.second.representative.start.y;
+            std::vector<std::pair<int, int>> tunnel_path = map_.tunnel_path;
+            for (const auto& point : tunnel_path) {
+                path.path.push_back(Point(point.first + x_start, point.second + y_start));
+            }
+            paths_to_solve_tunnel_constraints_[path.id] = path;
+        }
+    }
+
 private:
     const Map& map_;
     std::vector<Tunnel> tunnels_;
@@ -83,5 +110,6 @@ private:
     int num_tunnels;
     std::unordered_map<int, TunnelGroup> tunnel_groups_;
     int num_tunnel_groups;
+    std::unordered_map<int, Path_to_solve_tunnel_constraints> paths_to_solve_tunnel_constraints_;
 
 };
