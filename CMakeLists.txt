@@ -1,35 +1,70 @@
 cmake_minimum_required(VERSION 3.10)
-project(CTMP_MANI)
+project(ctmp_mani LANGUAGES CXX)
 
-# — Require C++17 —
+# require C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# — Collect all your .cpp files under src/ —
-file(GLOB_RECURSE SRC_FILES
-  "${CMAKE_SOURCE_DIR}/src/*.cpp"
+# ----------------------------------------------------------------------------
+# 1) your main library / executable
+# ----------------------------------------------------------------------------
+
+# grab all your .cpps under src/
+file(GLOB_RECURSE CTMP_SRC CONFIGURE_DEPENDS
+     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
-# — Declare the executable —
-add_executable(ctmp_mani ${SRC_FILES})
+add_executable(ctmp_mani
+  ${CTMP_SRC}
+)
 
-# — Make sure our own headers are visible — 
-#    this lets you #include "env_map.h" or #include <nlohmann/json.hpp>
-#    from include/nlohmann/json.hpp
+# make sure your headers are found
 target_include_directories(ctmp_mani PRIVATE
-  ${CMAKE_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/include
 )
 
-# — Try to find a system-installed nlohmann_json — 
-find_package(nlohmann_json 3.2.0 QUIET)
+# ----------------------------------------------------------------------------
+# 2) optional: system nlohmann_json (otherwise you already have bundled
+#    json.hpp in include/)
+# ----------------------------------------------------------------------------
+
+find_package(nlohmann_json QUIET)
 
 if (nlohmann_json_FOUND)
-  message(STATUS "Using system nlohmann_json v${nlohmann_json_VERSION}")
-  target_link_libraries(ctmp_mani PRIVATE nlohmann_json::nlohmann_json)
+  message(STATUS "Using system nlohmann_json")
+  target_link_libraries(ctmp_mani PRIVATE
+    nlohmann_json::nlohmann_json
+  )
 else()
-  message(STATUS "system nlohmann_json not found, using bundled include/nlohmann/json.hpp")
-  # nothing else to do — the single‐header in include/nlohmann/json.hpp will be picked up
+  message(STATUS "System nlohmann_json not found, using bundled one in include/")
 endif()
 
-# (later, if you add other libs:)
-# target_link_libraries(ctmp_mani PRIVATE other_library)
+# ----------------------------------------------------------------------------
+# 3) optional: SBPL or other libs
+# ----------------------------------------------------------------------------
+# find_package(SBPL REQUIRED)            # if you need SBPL
+# target_link_libraries(ctmp_mani PRIVATE sbpl)  # etc…
+
+# ----------------------------------------------------------------------------
+# 4) tests
+# ----------------------------------------------------------------------------
+option(BUILD_TESTS "Build unit tests" OFF)
+
+if (BUILD_TESTS)
+  enable_testing()
+  file(GLOB TEST_SRC CONFIGURE_DEPENDS
+    ${PROJECT_SOURCE_DIR}/tests/*.cpp
+  )
+  if (TEST_SRC)
+    add_executable(test_preprocessing ${TEST_SRC})
+    target_include_directories(test_preprocessing PRIVATE
+      ${PROJECT_SOURCE_DIR}/include
+    )
+    # link any test-only libraries here, e.g. sbpl, gtest, etc.
+    # target_link_libraries(test_preprocessing PRIVATE sbpl GTest::GTest)
+
+    add_test(NAME preprocessing COMMAND test_preprocessing)
+  else()
+    message(WARNING "BUILD_TESTS=ON but no tests/*.cpp files found")
+  endif()
+endif()

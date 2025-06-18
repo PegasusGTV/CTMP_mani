@@ -1,21 +1,54 @@
 #include "env_map.h"
-#include<iostream>
-#include<fstream>
+#include "tunnel_preprocessing.h"
+#include <iostream>
+#include <filesystem>
+
+// namespace fs = std::filesystem;
 
 int main() {
-    try {
-        Map env = loadMapFromFiles_preprocessing("../maps/map.txt", "../maps/map_meta.json");
+  const std::string map_txt  = "../maps/map.txt";
+  const std::string map_meta = "../maps/map_meta.json";
+  const std::string out_bin  = "../data/test_tunnels.bin";
 
-        std::cout << "Map size: " << env.x_length << " x " << env.y_length << "\n";
-        std::cout << "Start: (" << env.start.first << ", " << env.start.second << ")\n";
-        std::cout << "Goal: (" << env.goal.first << ", " << env.goal.second << ")\n";
-        std::cout << "Intermediate Zone: [" << env.intermediate_goal_zone[0] << ", " 
-                  << env.intermediate_goal_zone[1] << "]\n";
+  try {
+    // 1) Load
+    Map env = loadMapFromFiles_preprocessing(map_txt, map_meta);
+    std::cout << "Map loaded: "
+              << env.x_length << "×" << env.y_length
+              << "  start=(" << env.start.first  << "," << env.start.second << ")"
+              << "  goal =(" << env.goal.first   << "," << env.goal.second  << ")\n";
 
-        // You can now use env.grid, env.tunnel_shape, etc. in planning
+    // 2) Preprocess
+    TunnelPreprocessor pre(env);
+    pre.findTunnels();
+    pre.groupTunnels();
+    pre.solveTunnelConstraints();
 
-    } catch (const std::exception& e) {
-        std::cerr << "Error loading map: " << e.what() << std::endl;
+    // 3) Print discovered tunnels
+    // const auto &tunnels = pre.getTunnels();
+    // std::cout << "Discovered " << tunnels.size() << " tunnels:\n";
+    // for (auto &t : tunnels) {
+    //   std::cout << "  Tunnel #" << t.id
+    //             << "  length=" << t.cells.size() << " cells\n";
+    // }
+
+    // 4) Save to disk
+    if (!pre.saveTunnelsToFile(out_bin)) {
+      throw std::runtime_error("Failed to save tunnels to " + out_bin);
     }
+    std::cout << "Saved tunnel data to '" << out_bin << "'.\n";
+
+    // 5) Reload and verify
+    TunnelPreprocessor reloaded(env);
+    if (!reloaded.loadTunnelsFromFile(out_bin)) {
+      throw std::runtime_error("Failed to load tunnels from " + out_bin);
+    }
+    // std::cout << "Reloaded " << reloaded.getTunnels().size() << " tunnels successfully.\n";
+
     return 0;
+  }
+  catch (const std::exception &e) {
+    std::cerr << "Error: " << e.what() << "\n";
+    return 1;
+  }
 }
