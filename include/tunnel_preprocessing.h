@@ -76,6 +76,7 @@ public:
     /// or file‐format inconsistency.
     bool loadTunnelsFromFile(const std::string& filename);
 
+    std::vector<Tunnel> getTunnels();
 private:
     const Map& map_;  ///< source data
 

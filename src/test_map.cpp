@@ -22,15 +22,16 @@ int main() {
     TunnelPreprocessor pre(env);
     pre.findTunnels();
     pre.groupTunnels();
-    pre.solveTunnelConstraints();
+    pre.solveTunnelConstraints();\
+    // pre.saveTunnelsToFile(out_bin);
 
     // 3) Print discovered tunnels
-    // const auto &tunnels = pre.getTunnels();
-    // std::cout << "Discovered " << tunnels.size() << " tunnels:\n";
-    // for (auto &t : tunnels) {
-    //   std::cout << "  Tunnel #" << t.id
-    //             << "  length=" << t.cells.size() << " cells\n";
-    // }
+    const auto &tunnels = pre.getTunnels();
+    std::cout << "Discovered " << tunnels.size() << " tunnels:\n";
+    for (auto &t : tunnels) {
+      std::cout << "  Tunnel #" << t.id
+                << "  length=" << t.points.size() << " cells\n";
+    }
 
     // 4) Save to disk
     if (!pre.saveTunnelsToFile(out_bin)) {
@@ -43,7 +44,8 @@ int main() {
     if (!reloaded.loadTunnelsFromFile(out_bin)) {
       throw std::runtime_error("Failed to load tunnels from " + out_bin);
     }
-    // std::cout << "Reloaded " << reloaded.getTunnels().size() << " tunnels successfully.\n";
+
+    std::cout << "Reloaded " << reloaded.getTunnels().size() << " tunnels successfully.\n";
 
     return 0;
   }

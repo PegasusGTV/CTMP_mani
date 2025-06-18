@@ -457,3 +457,6 @@ bool TunnelPreprocessor::loadTunnelsFromFile(const std::string& filename) {
 }
 
 
+std::vector<Tunnel> TunnelPreprocessor::getTunnels() {
+    return tunnels_;
+}
