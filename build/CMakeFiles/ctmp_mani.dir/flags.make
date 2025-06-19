@@ -6,5 +6,5 @@ CXX_FLAGS =   -std=gnu++17
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/sbpla/Desktop/Gopal/Benchmark/CTMP_mani/include 
+CXX_INCLUDES = -I/home/sbpla/Desktop/Gopal/2d_benchmark/CTMP_mani/include 
 
