@@ -33,6 +33,10 @@ int main() {
                 << "  length=" << t.points.size() << " cells\n";
     }
 
+    std::cout<< "number of tunnel groups: " << pre.num_tunnels_in_group_ << "\n";
+    std::cout<< "number of tunnels: " << pre.num_tunnels_ << "\n";
+    std::cout<< "number of tunnel groups: " << pre.num_tunnel_groups_ << "\n";
+
     // 4) Save to disk
     if (!pre.saveTunnelsToFile(out_bin)) {
       throw std::runtime_error("Failed to save tunnels to " + out_bin);
@@ -46,6 +50,10 @@ int main() {
     }
 
     std::cout << "Reloaded " << reloaded.getTunnels().size() << " tunnels successfully.\n";
+
+    std::cout<< "number of tunnel groups: " << reloaded.num_tunnels_in_group_ << "\n";
+    std::cout<< "number of tunnels: " << reloaded.num_tunnels_ << "\n";
+    std::cout<< "number of tunnel groups: " << reloaded.num_tunnel_groups_ << "\n";
 
     return 0;
   }

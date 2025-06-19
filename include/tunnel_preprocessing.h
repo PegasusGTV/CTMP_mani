@@ -77,7 +77,7 @@ public:
     bool loadTunnelsFromFile(const std::string& filename);
 
     std::vector<Tunnel> getTunnels();
-private:
+// private:
     const Map& map_;  ///< source data
 
     // working data, built by findTunnels()/groupTunnels()/solveTunnelConstraints():

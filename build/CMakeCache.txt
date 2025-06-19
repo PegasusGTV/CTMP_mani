@@ -193,7 +193,7 @@ ctmp_mani_BINARY_DIR:STATIC=/home/sbpla/Desktop/Gopal/2d_benchmark/CTMP_mani/bui
 ctmp_mani_SOURCE_DIR:STATIC=/home/sbpla/Desktop/Gopal/2d_benchmark/CTMP_mani
 
 //The directory containing a CMake configuration file for nlohmann_json.
-nlohmann_json_DIR:PATH=nlohmann_json_DIR-NOTFOUND
+nlohmann_json_DIR:PATH=/home/sbpla/miniconda3/share/cmake/nlohmann_json
 
 
 ########################
