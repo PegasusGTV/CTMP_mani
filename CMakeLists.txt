@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.10)
 project(ctmp_mani LANGUAGES CXX)
 
-# require C++17
+# Require C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ----------------------------------------------------------------------------
-# 1) your main library / executable
+# 1) Main executable and sources
 # ----------------------------------------------------------------------------
 
-# grab all your .cpps under src/
+# Grab all .cpp files under src/
 file(GLOB_RECURSE CTMP_SRC CONFIGURE_DEPENDS
      ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
@@ -18,18 +18,29 @@ add_executable(ctmp_mani
   ${CTMP_SRC}
 )
 
-# make sure your headers are found
+# Include headers from include/
 target_include_directories(ctmp_mani PRIVATE
   ${PROJECT_SOURCE_DIR}/include
 )
 
 # ----------------------------------------------------------------------------
-# 2) optional: system nlohmann_json (otherwise you already have bundled
-#    json.hpp in include/)
+# 2) Boost Serialization
+# ----------------------------------------------------------------------------
+
+find_package(Boost REQUIRED COMPONENTS serialization)
+if (Boost_FOUND)
+  message(STATUS "Found Boost: ${Boost_INCLUDE_DIRS}")
+  target_include_directories(ctmp_mani PRIVATE ${Boost_INCLUDE_DIRS})
+  target_link_libraries(ctmp_mani PRIVATE ${Boost_LIBRARIES})
+else()
+  message(FATAL_ERROR "Boost.Serialization not found")
+endif()
+
+# ----------------------------------------------------------------------------
+# 3) Optional: system nlohmann_json
 # ----------------------------------------------------------------------------
 
 find_package(nlohmann_json QUIET)
-
 if (nlohmann_json_FOUND)
   message(STATUS "Using system nlohmann_json")
   target_link_libraries(ctmp_mani PRIVATE
@@ -40,13 +51,13 @@ else()
 endif()
 
 # ----------------------------------------------------------------------------
-# 3) optional: SBPL or other libs
+# 4) Optional: SBPL or other libraries
 # ----------------------------------------------------------------------------
-# find_package(SBPL REQUIRED)            # if you need SBPL
-# target_link_libraries(ctmp_mani PRIVATE sbpl)  # etc…
+# find_package(SBPL REQUIRED)
+# target_link_libraries(ctmp_mani PRIVATE sbpl)
 
 # ----------------------------------------------------------------------------
-# 4) tests
+# 5) Tests
 # ----------------------------------------------------------------------------
 option(BUILD_TESTS "Build unit tests" OFF)
 
@@ -59,10 +70,13 @@ if (BUILD_TESTS)
     add_executable(test_preprocessing ${TEST_SRC})
     target_include_directories(test_preprocessing PRIVATE
       ${PROJECT_SOURCE_DIR}/include
+      ${Boost_INCLUDE_DIRS}
     )
-    # link any test-only libraries here, e.g. sbpl, gtest, etc.
-    # target_link_libraries(test_preprocessing PRIVATE sbpl GTest::GTest)
-
+    target_link_libraries(test_preprocessing PRIVATE
+      ${Boost_LIBRARIES}
+      # sbpl
+      # GTest::GTest
+    )
     add_test(NAME preprocessing COMMAND test_preprocessing)
   else()
     message(WARNING "BUILD_TESTS=ON but no tests/*.cpp files found")

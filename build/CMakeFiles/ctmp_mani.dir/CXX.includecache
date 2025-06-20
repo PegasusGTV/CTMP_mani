@@ -423,6 +423,8 @@ unordered_map
 -
 string
 -
+map
+-
 boost/serialization/vector.hpp
 -
 boost/serialization/map.hpp

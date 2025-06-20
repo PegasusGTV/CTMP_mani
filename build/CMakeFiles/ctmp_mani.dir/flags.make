@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_FLAGS =   -std=gnu++17
 
-CXX_DEFINES = 
+CXX_DEFINES = -DBOOST_ALL_NO_LIB -DBOOST_SERIALIZATION_DYN_LINK
 
 CXX_INCLUDES = -I/home/sbpla/Desktop/Gopal/2d_benchmark/CTMP_mani/include -isystem /home/sbpla/miniconda3/include 
 

@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <map>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/serialization.hpp>
@@ -107,10 +108,13 @@ public:
     std::vector<Tunnel>                                    tunnels_;
     int                                                    num_tunnels_in_group_;
     int                                                    num_tunnels_;
-    std::unordered_map<int, TunnelGroup>                   tunnel_groups_;
+    // std::unordered_map<int, TunnelGroup>                   tunnel_groups_;
+    std::map<int, TunnelGroup>                   tunnel_groups_;
     int                                                    num_tunnel_groups_;
-    std::unordered_map<int, Path_to_solve_tunnel_constraints>
-                                                          paths_to_solve_tunnel_constraints_;
+    // std::unordered_map<int, Path_to_solve_tunnel_constraints>
+    //                                         paths_to_solve_tunnel_constraints_;
+    std::map<int, Path_to_solve_tunnel_constraints>
+                                            paths_to_solve_tunnel_constraints_;
 };
 
 #endif  // TUNNEL_PREPROCESSOR_H
