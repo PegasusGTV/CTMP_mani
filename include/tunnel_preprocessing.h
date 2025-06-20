@@ -5,6 +5,9 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/serialization.hpp>
 
 /// A simple 2D integer point.
 // struct Point {
@@ -27,6 +30,11 @@ struct Point {
     bool operator!=(const Point& other) const {
         return !(*this == other);
     }
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int /*version*/) {
+        ar & x & y;
+    }
 };
 
 /// A single tunnel: an ID, a list of coverage points, and a start.
@@ -34,6 +42,11 @@ struct Tunnel {
     int id;
     std::vector<Point> points;
     Point start;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int /*version*/) {
+        ar & id & points & start;
+    }
 };
 
 /// A group of tunnels sharing the same characteristics,
@@ -42,6 +55,11 @@ struct TunnelGroup {
     int id;
     std::vector<Tunnel> Tunnels;
     Tunnel representative;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int /*version*/) {
+        ar & id & Tunnels & representative;
+    }
 };
 
 /// A precomputed path (identified by ID) for solving the
@@ -49,6 +67,11 @@ struct TunnelGroup {
 struct Path_to_solve_tunnel_constraints {
     int id;
     std::vector<Point> path;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int /*version*/) {
+    ar & id & path;
+    }
 };
 
 /// Preprocesses a grid‐map into tunnel‐groups and solves
