@@ -8,7 +8,7 @@
 int main() {
   const std::string map_txt  = "../maps/map.txt";
   const std::string map_meta = "../maps/map_meta.json";
-  const std::string out_bin  = "../data/test_tunnels.bin";
+  const std::string out_bin  = "../data/test_tunnels.dat";
 
   try {
     // 1) Load
