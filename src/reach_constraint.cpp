@@ -25,11 +25,28 @@ struct IntermediateGoalRegionperTunnel{
 
 struct RootPathtoTunnelGroup{
     int id;
-    TunnelGroup tunnel_group;
+    int tunnel_group_id;
     std::vector<Point> root_path;
     std::vector<Point> region_covered_by_root_path;
+    Point start;
+    Point end;
+    double t_bound_1;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int /*version*/) {
-        ar & id & tunnel_group & root_path & region_covered_by_root_path;
+        ar & id & tunnel_group_id & root_path & region_covered_by_root_path & start & end & t_bound_1;
+    }
+};
+
+struct RootPathFromTunnelGroup{
+    int id;
+    int tunnel_group_id;
+    std::vector<Point> root_path;
+    std::vector<Point> region_covered_by_root_path;
+    Point start;
+    Point end;
+    double t_bound_2;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int /*version*/) {
+        ar & id & tunnel_group_id & root_path & region_covered_by_root_path & start & end & t_bound_2;
     }
 };
