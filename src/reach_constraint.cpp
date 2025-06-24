@@ -23,6 +23,16 @@ struct IntermediateGoalRegionperTunnel{
     }
 };
 
+struct IntermediateGoalRegionperTunnelGroup{
+    int id;
+    int tunnel_group_id;
+    std::vector<Point> intermediate_goal_region;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int /*version*/) {
+        ar & id & tunnel_group_id & intermediate_goal_region;
+    }
+};
+
 struct RootPathtoTunnelGroup{
     int id;
     int tunnel_group_id;
@@ -49,4 +59,47 @@ struct RootPathFromTunnelGroup{
     void serialize(Archive & ar, const unsigned int /*version*/) {
         ar & id & tunnel_group_id & root_path & region_covered_by_root_path & start & end & t_bound_2;
     }
+};
+
+class ReachConstraint {
+public:
+    ReachConstraint(const Map& map) : map_(map) {}
+
+    void findIntermediateGoalRegions(std::vector<Tunnel> tunnels, 
+                                     std::map<int, TunnelGroup> tunnel_groups) {
+        // Implementation to find intermediate goal regions per tunnel
+        std::vector<int> intermdiate_goal_zone = map_.intermediate_goal_zone;
+        int tunnel_width = map_.tunnel_width;
+        tunnels_ = tunnels;
+    }
+
+    void findRootPathsToTunnelGroups() {
+        // Implementation to find root paths to tunnel groups
+    }
+
+    void findRootPathsFromTunnelGroups() {
+        // Implementation to find root paths from tunnel groups
+    }
+
+    bool saveToFile(const std::string& filename) const {
+        // Implementation to save reach constraints to file
+        return true;
+    }
+
+    bool loadFromFile(const std::string& filename) {
+        // Implementation to load reach constraints from file
+        return true;
+    }
+
+private:
+    Map map_;
+    std::vector<Tunnel> tunnels_;
+    std::map<int, TunnelGroup> tunnel_groups_;
+    std::map<int, IntermediateGoalRegionperTunnel> intermediate_goal_regions_per_tunnel_;
+    std::map<int, IntermediateGoalRegionperTunnelGroup> intermediate_goal_regions_per_tunnel_group_;
+    // std::vector<IntermediateGoalRegionperTunnel> intermediate_goal_regions_;
+    std::vector<RootPathtoTunnelGroup> root_paths_to_tunnel_groups_;
+    std::vector<RootPathFromTunnelGroup> root_paths_from_tunnel_groups_;
+
+
 };
