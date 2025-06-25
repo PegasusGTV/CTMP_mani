@@ -66,11 +66,36 @@ public:
     ReachConstraint(const Map& map) : map_(map) {}
 
     void findIntermediateGoalRegions(std::vector<Tunnel> tunnels, 
-                                     std::map<int, TunnelGroup> tunnel_groups) {
+                                     std::map<int, TunnelGroup> tunnel_groups,
+                                    double t_bound_1, double t_bound_2) {
         // Implementation to find intermediate goal regions per tunnel
         std::vector<int> intermdiate_goal_zone = map_.intermediate_goal_zone;
         int tunnel_width = map_.tunnel_width;
         tunnels_ = tunnels;
+        tunnel_groups_ = tunnel_groups;
+        for (const auto& tunnel : tunnels_) {
+            IntermediateGoalRegionperTunnel region;
+            region.id = tunnel.id;
+            region.tunnel = tunnel;
+            for (int i = intermdiate_goal_zone[0]; i <= intermdiate_goal_zone[1]; ++i) {
+                for(int j = tunnel.start.y - static_cast<int>(tunnel_width/2) - 1; j <= tunnel.start.y + tunnel_width/2; ++j) {
+                    region.intermediate_goal_region.push_back(Point(i, j));
+                }
+            }
+            intermediate_goal_regions_per_tunnel_[region.id] = region;
+        }
+
+        for(const auto& group : tunnel_groups_) {
+            IntermediateGoalRegionperTunnelGroup region_group;
+            region_group.id = group.first;
+            region_group.tunnel_group_id = group.first;
+            for (int i = intermdiate_goal_zone[0]; i <= intermdiate_goal_zone[1]; ++i) {
+                for(int j = group.second.representative.start.y - tunnel_width - 1; j <= group.second.representative.start.y + tunnel_width; ++j) {
+                    region_group.intermediate_goal_region.push_back(Point(i, j));
+                }
+            }
+            intermediate_goal_regions_per_tunnel_group_[region_group.id] = region_group;
+        }
     }
 
     void findRootPathsToTunnelGroups() {
