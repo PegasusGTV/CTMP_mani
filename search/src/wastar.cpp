@@ -31,7 +31,7 @@ struct Node {
     Point point;
     double g_cost; // Cost from start to this node
     double h_cost; // Heuristic cost to goal
-    double f_cost() const { return g_cost + h_cost; }
+    double f_cost(double weight = 1.0) const { return g_cost + weight * h_cost; }
     Node *parent; // Pointer to parent node
 
     Node(Point p, double g, double h, Node* par = nullptr)
@@ -42,3 +42,26 @@ struct Node {
     }
 };
 
+
+std::vector<Point> getNeighbors(const Point& point, const std::vector<std::vector<int>>& map) {
+    std::vector<Point> neighbors;
+    int directions[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // Right, Down, Left, Up
+    for (const auto& dir : directions) {
+        Point neighbor(point.x + dir[0], point.y + dir[1]);
+        if (neighbor.x >= 0 && neighbor.x < map.size() &&
+            neighbor.y >= 0 && neighbor.y < map[0].size() &&
+            map[neighbor.x][neighbor.y] == 0) { // Assuming 0 is walkable
+            neighbors.push_back(neighbor);
+        }
+    }
+    return neighbors;
+    
+}
+
+double heuristic(const Point& a, const Point& b) {
+    return std::abs(a.x - b.x) + std::abs(a.y - b.y); // Manhattan
+}
+
+std::vector<Point> WaStar(const std::vector<std::vector<int>>& map, const Point& start, const Point& goal, double weight) {
+    auto cmp = [weight](Node* a, Node* b) { return a->f_cost(weight) > b->f_cost(weight); };
+}
