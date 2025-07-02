@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(ctmp_mani LANGUAGES CXX)
 
-# Require C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -9,18 +8,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # 1) Main executable and sources
 # ----------------------------------------------------------------------------
 
-# Grab all .cpp files under src/
 file(GLOB_RECURSE CTMP_SRC CONFIGURE_DEPENDS
      ${PROJECT_SOURCE_DIR}/src/*.cpp
+     ${PROJECT_SOURCE_DIR}/search/src/*.cpp  # Add this line for wastar.cpp
 )
 
 add_executable(ctmp_mani
   ${CTMP_SRC}
 )
 
-# Include headers from include/
 target_include_directories(ctmp_mani PRIVATE
   ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/search/include  # Add this line for wastar.h
 )
 
 # ----------------------------------------------------------------------------
@@ -71,6 +70,7 @@ if (BUILD_TESTS)
     target_include_directories(test_preprocessing PRIVATE
       ${PROJECT_SOURCE_DIR}/include
       ${Boost_INCLUDE_DIRS}
+      ${PROJECT_SOURCE_DIR}/search/include  # Include wastar in test too
     )
     target_link_libraries(test_preprocessing PRIVATE
       ${Boost_LIBRARIES}
