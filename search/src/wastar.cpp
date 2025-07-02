@@ -98,3 +98,21 @@ std::vector<Point> WaStar(const std::vector<std::vector<int>>& grid, const Point
     std::cerr << "No path found.\n";
     return {};
 }
+
+
+
+int main() {
+    std::vector<std::vector<int>> grid = {
+        {0,0,0,0},
+        {1,1,0,1},
+        {0,0,0,0},
+        {0,1,1,0}
+    };
+    Point start = {0, 0}, goal = {3, 3};
+    double weight = 2.0;
+
+    auto path = WaStar(grid, start, goal, weight);
+    for (const auto& p : path)
+        std::cout << "(" << p.x << ", " << p.y << ") ";
+    std::cout << "\n";
+}
