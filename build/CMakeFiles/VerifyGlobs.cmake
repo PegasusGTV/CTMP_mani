@@ -6,6 +6,7 @@ file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "/home/sbpla/Desktop/Gopal/2d_
 set(OLD_GLOB
   "/home/sbpla/Desktop/Gopal/2d_benchmark/CTMP_mani/src/latch_split.cpp"
   "/home/sbpla/Desktop/Gopal/2d_benchmark/CTMP_mani/src/load_map_preprocessing.cpp"
+  "/home/sbpla/Desktop/Gopal/2d_benchmark/CTMP_mani/src/reach_constraint.cpp"
   "/home/sbpla/Desktop/Gopal/2d_benchmark/CTMP_mani/src/test_map.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
