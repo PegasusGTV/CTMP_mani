@@ -462,7 +462,11 @@ void TunnelPreprocessor::solveTunnelConstraints() {
 
 bool TunnelPreprocessor::saveTunnelsToFile(const std::string& filename) const {
     try {
-      boost::filesystem::ofstream ofs(filename);
+    //   boost::filesystem::ofstream ofs(filename);
+      std::ofstream ofs(filename);
+      if (!ofs.is_open()) {
+        throw std::runtime_error("Could not open file for writing: " + filename);
+      }
       boost::archive::text_oarchive oa(ofs);
       oa << tunnels_
          << num_tunnels_in_group_
@@ -481,7 +485,12 @@ bool TunnelPreprocessor::saveTunnelsToFile(const std::string& filename) const {
 
 bool TunnelPreprocessor::loadTunnelsFromFile(const std::string& filename) {
     try {
-        boost::filesystem::ifstream ifs(filename);
+
+        std::ifstream ifs(filename);
+        if (!ifs.is_open()) {
+            throw std::runtime_error("Could not open file for reading: " + filename);
+        }
+        // boost::filesystem::ifstream ifs(filename);
         boost::archive::text_iarchive ia(ifs);
         ia >> tunnels_
            >> num_tunnels_in_group_

@@ -109,9 +109,10 @@ public:
             while(!region_to_cover.empty()) {
                 auto it = region_to_cover.begin();
                 std::advance(it, rand() % region_to_cover.size());
-                Point start = *it;
+                Point root_goal = *it;
+                Point start(map_.start.first, map_.start.second);
 
-                
+                std::vector<Point> root_path = WaStar(map_.occupancy_grid, start, root_goal, 1.0);
             }
         }
         
