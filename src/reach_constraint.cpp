@@ -121,6 +121,14 @@ public:
                     root_path.root_path = path;
                     root_path.start = start;
                     root_path.end = root_goal;
+                    root_path.t_bound_1 = t_bound_1_;
+                    int perception_x = map_.intermediate_goal_zone[0] - perception_radius_;
+
+                    auto pivot = std::find_if(path.begin(), path.end(), [&](const Point& p) {
+                        return p.x == perception_x;
+                    });
+
+                    
                 }
             }
         }
@@ -154,6 +162,7 @@ private:
     // std::vector<IntermediateGoalRegionperTunnel> intermediate_goal_regions_;
     std::vector<RootPathtoTunnelGroup> root_paths_to_tunnel_groups_;
     std::vector<RootPathFromTunnelGroup> root_paths_from_tunnel_groups_;
+    int perception_radius_ = 10; // Default perception radius
 
 
 };
