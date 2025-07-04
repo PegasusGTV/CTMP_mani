@@ -110,6 +110,8 @@ public:
                 auto it = region_to_cover.begin();
                 std::advance(it, rand() % region_to_cover.size());
                 Point start = *it;
+
+                
             }
         }
         

@@ -2,6 +2,7 @@
 #define TUNNEL_PREPROCESSOR_H
 #pragma once
 #include "env_map.h"                   // for Map
+#include "point.h"                     // for Point
 #include <vector>
 #include <unordered_map>
 #include <string>
@@ -19,24 +20,24 @@
 //     bool operator==(const Point& other) const;
 //     bool operator!=(const Point& other) const;
 // };
-struct Point {
-    int x, y;
-    Point() : x(0), y(0) {}
-    Point(int x, int y) : x(x), y(y) {}
+// struct Point {
+//     int x, y;
+//     Point() : x(0), y(0) {}
+//     Point(int x, int y) : x(x), y(y) {}
     
-    bool operator==(const Point& other) const {
-        return x == other.x && y == other.y;
-    }
+//     bool operator==(const Point& other) const {
+//         return x == other.x && y == other.y;
+//     }
     
-    bool operator!=(const Point& other) const {
-        return !(*this == other);
-    }
+//     bool operator!=(const Point& other) const {
+//         return !(*this == other);
+//     }
 
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int /*version*/) {
-        ar & x & y;
-    }
-};
+//     template<class Archive>
+//     void serialize(Archive & ar, const unsigned int /*version*/) {
+//         ar & x & y;
+//     }
+// };
 
 /// A single tunnel: an ID, a list of coverage points, and a start.
 struct Tunnel {
