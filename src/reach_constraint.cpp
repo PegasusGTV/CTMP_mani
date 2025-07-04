@@ -1,5 +1,6 @@
 #include "env_map.h"
 #include "tunnel_preprocessing.h"
+#include "search/include/wastar.h"
 #include<iostream>
 #include<fstream>
 #include <vector>
@@ -103,6 +104,14 @@ public:
 
     void findRootPathsToTunnelGroups() {
         // Implementation to find root paths to tunnel groups
+        for(const auto& group : intermediate_goal_regions_per_tunnel_group_){
+            std::vector<Point> region_to_cover = group.second.intermediate_goal_region;
+            while(!region_to_cover.empty()) {
+                auto it = region_to_cover.begin();
+                std::advance(it, rand() % region_to_cover.size());
+                Point start = *it;
+            }
+        }
         
     }
 
@@ -128,6 +137,8 @@ private:
     std::map<int, IntermediateGoalRegionperTunnelGroup> intermediate_goal_regions_per_tunnel_group_;
     double t_bound_1_;
     double t_bound_2_;
+    std::map<int, RootPathtoTunnelGroup> root_paths_to_tunnel_groups_;
+    std::map<int, RootPathFromTunnelGroup> root_paths_from_tunnel_groups_;
     // std::vector<IntermediateGoalRegionperTunnel> intermediate_goal_regions_;
     std::vector<RootPathtoTunnelGroup> root_paths_to_tunnel_groups_;
     std::vector<RootPathFromTunnelGroup> root_paths_from_tunnel_groups_;
