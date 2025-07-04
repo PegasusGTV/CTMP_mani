@@ -105,6 +105,7 @@ public:
     void findRootPathsToTunnelGroups() {
         // Implementation to find root paths to tunnel groups
         for(const auto& group : intermediate_goal_regions_per_tunnel_group_){
+            int root_path_number = 0;
             std::vector<Point> region_to_cover = group.second.intermediate_goal_region;
             while(!region_to_cover.empty()) {
                 auto it = region_to_cover.begin();
@@ -112,7 +113,15 @@ public:
                 Point root_goal = *it;
                 Point start(map_.start.first, map_.start.second);
 
-                std::vector<Point> root_path = WaStar(map_.occupancy_grid, start, root_goal, 1.0);
+                std::vector<Point> path = WaStar(map_.occupancy_grid, start, root_goal, 1.0);
+                if( !path.empty()) {
+                    RootPathtoTunnelGroup root_path;
+                    root_path.id = root_path_number++;
+                    root_path.tunnel_group_id = group.first;
+                    root_path.root_path = path;
+                    root_path.start = start;
+                    root_path.end = root_goal;
+                }
             }
         }
         
