@@ -128,7 +128,10 @@ public:
                         return p.x == perception_x;
                     });
 
-                    
+                    if(pivot != path.end()) {
+                        Point pivot_point = *pivot;
+                    }
+
                 }
             }
         }
