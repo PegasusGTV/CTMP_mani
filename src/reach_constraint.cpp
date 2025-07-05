@@ -236,14 +236,66 @@ public:
 
     }
 
+    // bool saveToFile(const std::string& filename) const {
+    //     // Implementation to save reach constraints to file
+    //     return true;
+    // }
+
+    // bool loadFromFile(const std::string& filename) {
+    //     // Implementation to load reach constraints from file
+    //     return true;
+    // }
+
     bool saveToFile(const std::string& filename) const {
-        // Implementation to save reach constraints to file
-        return true;
+        try {
+            std::ofstream ofs(filename);
+            if (!ofs.is_open()) {
+                std::cerr << "Failed to open file for writing: " << filename << "\n";
+                return false;
+            }
+
+            boost::archive::text_oarchive oa(ofs);
+            oa << tunnels_;
+            oa << tunnel_groups_;
+            oa << intermediate_goal_regions_per_tunnel_;
+            oa << intermediate_goal_regions_per_tunnel_group_;
+            oa << root_paths_to_tunnel_groups_;
+            oa << root_paths_from_tunnel_groups_;
+            oa << t_bound_1_;
+            oa << t_bound_2_;
+
+            std::cout << "Saved ReachConstraint to file: " << filename << "\n";
+            return true;
+        } catch (const std::exception& e) {
+            std::cerr << "Exception during save: " << e.what() << "\n";
+            return false;
+        }
     }
 
     bool loadFromFile(const std::string& filename) {
-        // Implementation to load reach constraints from file
-        return true;
+        try {
+            std::ifstream ifs(filename);
+            if (!ifs.is_open()) {
+                std::cerr << "Failed to open file for reading: " << filename << "\n";
+                return false;
+            }
+
+            boost::archive::text_iarchive ia(ifs);
+            ia >> tunnels_;
+            ia >> tunnel_groups_;
+            ia >> intermediate_goal_regions_per_tunnel_;
+            ia >> intermediate_goal_regions_per_tunnel_group_;
+            ia >> root_paths_to_tunnel_groups_;
+            ia >> root_paths_from_tunnel_groups_;
+            ia >> t_bound_1_;
+            ia >> t_bound_2_;
+
+            std::cout << "Loaded ReachConstraint from file: " << filename << "\n";
+            return true;
+        } catch (const std::exception& e) {
+            std::cerr << "Exception during load: " << e.what() << "\n";
+            return false;
+        }
     }
 
 private:
@@ -257,8 +309,8 @@ private:
     std::map<int, std::vector<RootPathtoTunnelGroup>> root_paths_to_tunnel_groups_;
     std::map<int, std::vector<RootPathFromTunnelGroup>> root_paths_from_tunnel_groups_;
     // std::vector<IntermediateGoalRegionperTunnel> intermediate_goal_regions_;
-    std::vector<RootPathtoTunnelGroup> root_paths_to_tunnel_groups_;
-    std::vector<RootPathFromTunnelGroup> root_paths_from_tunnel_groups_;
+    // std::vector<RootPathtoTunnelGroup> root_paths_to_tunnel_groups_;
+    // std::vector<RootPathFromTunnelGroup> root_paths_from_tunnel_groups_;
     int perception_radius_ = 10; // Default perception radius
 
 
