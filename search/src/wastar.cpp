@@ -52,7 +52,7 @@ std::vector<Point> WaStar(const std::vector<std::vector<int>>& grid, const Point
         }
     }
 
-    std::cerr << "No path found.\n";
+    // std::cerr << "No path found.\n";
     return {};
 }
 

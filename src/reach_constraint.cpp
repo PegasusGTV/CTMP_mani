@@ -1,12 +1,17 @@
 #include "reach_constraint.h"
 // class ReachConstraint {
 // public:
-ReachConstraint::ReachConstraint(const Map& map) : map_(map) {}
+ReachConstraint::ReachConstraint(const Map& map) : map_(map), grid_no_constraint(map) {}
 
 void ReachConstraint::findIntermediateGoalRegions(std::vector<Tunnel> tunnels, 
                                     std::map<int, TunnelGroup> tunnel_groups,
                                 double t_bound_1, double t_bound_2) {
     // Implementation to find intermediate goal regions per tunnel
+    for (int x = map_.constraint_zone[0]; x <= map_.constraint_zone[1]; ++x) {
+        for (int y = 0; y < map_.occupancy_grid[0].size(); ++y) {
+            grid_no_constraint.occupancy_grid[x][y] = 0; // Mark as free
+        }
+    }
     std::vector<int> intermdiate_goal_zone = map_.intermediate_goal_zone;
     int tunnel_width = map_.tunnel_width;
     tunnels_ = tunnels;
@@ -51,7 +56,7 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
             Point root_goal = *it;
             Point start(map_.start.first, map_.start.second);
 
-            std::vector<Point> path = WaStar(map_.occupancy_grid, start, root_goal, 1.0);
+            std::vector<Point> path = WaStar(grid_no_constraint.occupancy_grid, start, root_goal, 1.0);
             if( !path.empty()) {
                 RootPathtoTunnelGroup root_path;
                 root_path.id = root_path_number++;
@@ -74,7 +79,7 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
 
                 for(auto const& region_point : region_to_cover){
                     auto start_time = std::chrono::high_resolution_clock::now();
-                    std::vector<Point> path_region = WaStar(map_.occupancy_grid, pivot_point, region_point, 2.0);
+                    std::vector<Point> path_region = WaStar(grid_no_constraint.occupancy_grid, pivot_point, region_point, 2.0);
                     auto end_time = std::chrono::high_resolution_clock::now();
                     std::chrono::duration<double> elapsed = end_time - start_time;
                     double planning_time = elapsed.count(); // seconds
@@ -111,7 +116,7 @@ void ReachConstraint::findRootPathsFromTunnelGroups() {
             Point root_start = *it;
             Point constraint_start = tunnel_groups_[group.second.tunnel_group_id].representative.start;
 
-            std::vector<Point> path = WaStar(map_.occupancy_grid, root_start, constraint_start, 1.0);
+            std::vector<Point> path = WaStar(grid_no_constraint.occupancy_grid, root_start, constraint_start, 1.0);
             if(!path.empty()){
                 RootPathFromTunnelGroup root_path;
                 root_path.id = root_path_number++;
@@ -147,7 +152,7 @@ void ReachConstraint::findRootPathsFromTunnelGroups() {
 
                 for(auto const& region_point : region_to_cover){
                     auto start_time = std::chrono::high_resolution_clock::now();
-                    std::vector<Point> path_region = WaStar(map_.occupancy_grid, pivot_point, region_point, 2.0);
+                    std::vector<Point> path_region = WaStar(grid_no_constraint.occupancy_grid, pivot_point, region_point, 2.0);
                     auto end_time = std::chrono::high_resolution_clock::now();
                     std::chrono::duration<double> elapsed = end_time - start_time;
                     double planning_time = elapsed.count(); // seconds

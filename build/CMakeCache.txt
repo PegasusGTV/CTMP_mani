@@ -14,9 +14,6 @@
 # EXTERNAL cache entries
 ########################
 
-//Build unit tests
-BUILD_TESTS:BOOL=OFF
-
 //The directory containing a CMake configuration file for Boost.
 Boost_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Boost-1.83.0
 

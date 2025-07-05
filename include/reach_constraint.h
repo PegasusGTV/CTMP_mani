@@ -93,6 +93,7 @@ public:
 
 // private:
     Map map_;
+    Map grid_no_constraint;
     std::vector<Tunnel> tunnels_;
     std::map<int, TunnelGroup> tunnel_groups_;
     std::map<int, IntermediateGoalRegionperTunnel> intermediate_goal_regions_per_tunnel_;
