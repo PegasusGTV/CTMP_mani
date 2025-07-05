@@ -105,6 +105,7 @@ public:
 
     void findRootPathsToTunnelGroups() {
         // Implementation to find root paths to tunnel groups
+        std::srand(static_cast<unsigned int>(std::time(nullptr)));
         for(const auto& group : intermediate_goal_regions_per_tunnel_group_){
             int root_path_number = 0;
             std::vector<Point> region_to_cover = group.second.intermediate_goal_region;
@@ -164,6 +165,75 @@ public:
 
     void findRootPathsFromTunnelGroups() {
         // Implementation to find root paths from tunnel groups
+        std::srand(static_cast<unsigned int>(std::time(nullptr)));
+        for(const auto& group : intermediate_goal_regions_per_tunnel_group_){
+            int root_path_number = 0;
+            std::vector<Point> region_to_cover = group.second.intermediate_goal_region;
+            while(!region_to_cover.empty()) {
+                auto it = region_to_cover.begin();
+                std::advance(it, rand() % region_to_cover.size());
+                Point root_start = *it;
+                Point constraint_start = tunnel_groups_[group.second.tunnel_group_id].representative.start;
+
+                std::vector<Point> path = WaStar(map_.occupancy_grid, root_start, constraint_start, 1.0);
+                if(!path.empty()){
+                    RootPathFromTunnelGroup root_path;
+                    root_path.id = root_path_number++;
+                    root_path.tunnel_group_id = group.first;
+                    root_path.root_path = path;
+                    root_path.start = root_start;
+                    root_path.end = constraint_start;
+                    root_path.t_bound_2 = t_bound_2_;
+                    int perception_x = map_.intermediate_goal_zone[1] - perception_radius_;
+
+                    auto pivot = std::find_if(path.begin(), path.end(), [&](const Point& p) {
+                        return p.x == perception_x;
+                    });
+                    Point pivot_point;
+
+                    if (pivot != path.end()) {
+                        pivot_point = *pivot;
+                    } else {
+                        // fallback: use the first point where p.x > perception_x
+                        auto pivot_gt = std::find_if(path.begin(), path.end(), [&](const Point& p) {
+                            return p.x > perception_x;
+                        });
+
+                        if (pivot_gt != path.end()) {
+                            pivot_point = *pivot_gt;
+                        } else {
+                            // ultimate fallback: just use path.begin() if nothing matches
+                            pivot_point = *path.begin();
+                        }
+                    }
+
+                    root_path.region_covered_by_root_path.push_back(root_start);
+
+                    for(auto const& region_point : region_to_cover){
+                        auto start_time = std::chrono::high_resolution_clock::now();
+                        std::vector<Point> path_region = WaStar(map_.occupancy_grid, pivot_point, region_point, 2.0);
+                        auto end_time = std::chrono::high_resolution_clock::now();
+                        std::chrono::duration<double> elapsed = end_time - start_time;
+                        double planning_time = elapsed.count(); // seconds
+
+                        if(!path_region.empty() && planning_time < t_bound_2_) {
+                            root_path.region_covered_by_root_path.push_back(region_point);
+                        }  
+                    }
+
+                    root_paths_from_tunnel_groups_[group.first].push_back(root_path);
+                    region_to_cover.erase(
+                    std::remove_if(region_to_cover.begin(), region_to_cover.end(),
+                        [&](const Point& p) {
+                            return std::find(root_path.region_covered_by_root_path.begin(),
+                                            root_path.region_covered_by_root_path.end(), p)
+                                != root_path.region_covered_by_root_path.end();
+                        }),
+                    region_to_cover.end());
+                }
+            }
+        }
+
     }
 
     bool saveToFile(const std::string& filename) const {
@@ -185,7 +255,7 @@ private:
     double t_bound_1_;
     double t_bound_2_;
     std::map<int, std::vector<RootPathtoTunnelGroup>> root_paths_to_tunnel_groups_;
-    std::map<int, RootPathFromTunnelGroup> root_paths_from_tunnel_groups_;
+    std::map<int, std::vector<RootPathFromTunnelGroup>> root_paths_from_tunnel_groups_;
     // std::vector<IntermediateGoalRegionperTunnel> intermediate_goal_regions_;
     std::vector<RootPathtoTunnelGroup> root_paths_to_tunnel_groups_;
     std::vector<RootPathFromTunnelGroup> root_paths_from_tunnel_groups_;
