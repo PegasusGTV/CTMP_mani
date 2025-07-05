@@ -13,6 +13,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/serialization/map.hpp>
+#include <chrono>
 
 struct IntermediateGoalRegionperTunnel{
     int id;
@@ -128,10 +129,33 @@ public:
                         return p.x == perception_x;
                     });
 
-                    if(pivot != path.end()) {
-                        Point pivot_point = *pivot;
+                    // if(pivot != path.end()) {
+                    Point pivot_point = *pivot;
+                    // }
+
+                    root_path.region_covered_by_root_path.push_back(root_goal);
+
+                    for(auto const& region_point : region_to_cover){
+                        auto start_time = std::chrono::high_resolution_clock::now();
+                        std::vector<Point> path_region = WaStar(map_.occupancy_grid, pivot_point, region_point, 2.0);
+                        auto end_time = std::chrono::high_resolution_clock::now();
+                        std::chrono::duration<double> elapsed = end_time - start_time;
+                        double planning_time = elapsed.count(); // seconds
+
+                        if(!path_region.empty() && planning_time < t_bound_1_) {
+                            root_path.region_covered_by_root_path.push_back(region_point);
+                        }  
                     }
 
+                    root_paths_to_tunnel_groups_[group.first].push_back(root_path);
+                    region_to_cover.erase(
+                    std::remove_if(region_to_cover.begin(), region_to_cover.end(),
+                        [&](const Point& p) {
+                            return std::find(root_path.region_covered_by_root_path.begin(),
+                                            root_path.region_covered_by_root_path.end(), p)
+                                != root_path.region_covered_by_root_path.end();
+                        }),
+                    region_to_cover.end());
                 }
             }
         }
@@ -160,7 +184,7 @@ private:
     std::map<int, IntermediateGoalRegionperTunnelGroup> intermediate_goal_regions_per_tunnel_group_;
     double t_bound_1_;
     double t_bound_2_;
-    std::map<int, RootPathtoTunnelGroup> root_paths_to_tunnel_groups_;
+    std::map<int, std::vector<RootPathtoTunnelGroup>> root_paths_to_tunnel_groups_;
     std::map<int, RootPathFromTunnelGroup> root_paths_from_tunnel_groups_;
     // std::vector<IntermediateGoalRegionperTunnel> intermediate_goal_regions_;
     std::vector<RootPathtoTunnelGroup> root_paths_to_tunnel_groups_;
