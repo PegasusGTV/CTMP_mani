@@ -3,7 +3,7 @@
 #pragma once
 #include "env_map.h"
 #include "tunnel_preprocessing.h"
-#include "search/include/wastar.h"
+#include "wastar.h"
 #include<iostream>
 #include<fstream>
 #include <vector>
