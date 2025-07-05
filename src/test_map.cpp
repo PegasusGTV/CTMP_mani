@@ -167,9 +167,53 @@ int main() {
     ReachConstraint reach(map);
     reach.findIntermediateGoalRegions(tunnels, tunnel_groups, 0.01, 0.01);
     reach.findRootPathsToTunnelGroups();
+    reach.findRootPathsFromTunnelGroups();
 
+    // std::string filename = "reach_test_save.dat";
+
+    // if (reach.saveToFile(filename)) {
+    //     std::cout << "Saved ReachConstraint successfully.\n";
+    // } else {
+    //     std::cerr << "Failed to save ReachConstraint.\n";
+    // }
+
+    // ReachConstraint loaded_reach(map);
+    // if (loaded_reach.loadFromFile(filename)) {
+    //     std::cout << "Loaded ReachConstraint successfully.\n";
+    // } else {
+    //     std::cerr << "Failed to load ReachConstraint.\n";
+    // }
+
+    std::cout << "=== REACH CONSTRAINT INTERNAL STATE ===\n";
+
+    // 1) How many intermediate goal regions did we carve out?
+    const auto& igr = reach.intermediate_goal_regions_per_tunnel_group_;  
+    std::cout << "IntermediateGoalRegions.size() = " << igr.size() << "\n";
+    for(auto& p: igr){
+    //   std::cout << "  Region["<<i<<"] := ";
+      std::cout << "("<<p.first<<","<<p.second.tunnel_group_id<<") ";
+      std::cout<<"\n";
+    }
+
+    // 2) How many root‐to‐tunnel‐group paths?
+    const auto& R2TG = reach.root_paths_to_tunnel_groups_;
+    std::cout << "RootPathsToTunnelGroups.size() = " << R2TG.size() << "\n";
+    for(auto const& [tgid, path] : R2TG){
+      std::cout << "  TunnelGroup " << tgid
+                << " : path length = " << path.size() << "\n";
+    }
+
+    // 3) How many root‐from‐tunnel‐group paths?
+    const auto& RfTG = reach.root_paths_from_tunnel_groups_;
+    std::cout << "RootPathsFromTunnelGroups.size() = " << RfTG.size() << "\n";
+    for(auto const& [tgid, path] : RfTG){
+      std::cout << "  TunnelGroup " << tgid
+                << " : path length = " << path.size() << "\n";
+    }
+    std::cout << "========================================\n";
+
+    // now test serialization
     std::string filename = "reach_test_save.dat";
-
     if (reach.saveToFile(filename)) {
         std::cout << "Saved ReachConstraint successfully.\n";
     } else {
@@ -182,6 +226,7 @@ int main() {
     } else {
         std::cerr << "Failed to load ReachConstraint.\n";
     }
+
 
     return 0;
 }
