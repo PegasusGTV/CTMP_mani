@@ -33,6 +33,7 @@ int main() {
 
     // 3) Print discovered tunnels
     const auto &tunnels = pre.getTunnels();
+    const auto &path = pre.paths_to_solve_tunnel_constraints_;
     std::cout << "Discovered " << tunnels.size() << " tunnels:\n";
     for (auto &t : tunnels) {
       std::cout << "  Tunnel #" << t.id
@@ -68,6 +69,24 @@ int main() {
         }
         j["tunnels"].push_back(std::move(tj));
       }
+
+      j["paths"] = json::array();
+      for (auto const & kv : path)
+      {
+      const auto & path_struct = kv.second;
+      json pj;
+      pj["id"]     = path_struct.id;
+      pj["points"] = json::array();
+      for (auto const & p : path_struct.path)
+      {
+          pj["points"].push_back({
+          { "x", p.x },
+          { "y", p.y }
+          });
+      }
+      j["paths"].push_back(std::move(pj));
+      }
+
       std::ofstream ofs(out_json);
       if (!ofs) throw std::runtime_error("Could not open " + out_json);
       ofs << j.dump(2) << std::endl;

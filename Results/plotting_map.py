@@ -21,11 +21,24 @@ plt.xlabel("x")
 plt.ylabel("y")
 
 # 4) overlay each “tunnel” (i.e. the saved path)
-for t in data["tunnels"]:
-    xs = [p["x"] for p in t["points"]]
-    ys = [p["y"] for p in t["points"]]
-    # plt.plot(xs, ys, '-o', label=f"tunnel {t['id']}")
-    plt.plot(xs, ys, '-o')
+# for t in data["tunnels"]:
+#     xs = [p["x"] for p in t["points"]]
+#     ys = [p["y"] for p in t["points"]]
+#     # plt.plot(xs, ys, '-o', label=f"tunnel {t['id']}")
+#     plt.plot(xs, ys, '-o')
+
+for i, P in enumerate(data.get("paths", [])):
+    xs = [pt["x"] for pt in P["points"]]
+    ys = [pt["y"] for pt in P["points"]]
+    label = "precomputed paths" if i==0 else None
+    plt.plot(xs, ys, '-r', linewidth=0.5, label=label)
+
+
+# for P in data.get("paths", []):
+#     xs = [pt["x"] for pt in P["points"]]
+#     ys = [pt["y"] for pt in P["points"]]
+#     # pick a different colour or linestyle so you can tell tunnels & paths apart
+#     plt.plot(xs, ys, '-r', linewidth=2, label=f"path {P['id']}")
 
 # 5) scatter start/goal
 sx, sy = data["map"]["start"]["x"], data["map"]["start"]["y"]
