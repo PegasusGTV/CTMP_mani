@@ -75,8 +75,8 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
         
         std::vector<Point> region_to_cover = group.second.intermediate_goal_region;
         // if(root_path_number == 0){
-        //     std::cout<< "passed thriugh this point" << std::endl;
-        //     std::cout<< "region_to_cover size: " << region_to_cover.size() << std::endl;
+        std::cout<< "passed thriugh this point" << std::endl;
+        std::cout<< "region_to_cover size: " << region_to_cover.size() << std::endl;
         // }
 
         while(!region_to_cover.empty()) {
@@ -85,8 +85,9 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
             Point root_goal = *it;
             Point start(map_.start.first, map_.start.second);
             // if(root_path_number == 0){
-            //     std::cout<< "root_goal: " << root_goal.x << ", " << root_goal.y << std::endl;
-            //     std::cout<< "start: " << start.x << ", " << start.y << std::endl;
+            std::cout<< "root_goal: " << root_goal.x << ", " << root_goal.y << std::endl;
+            std::cout<< "size of region_to_cover: " << region_to_cover.size() << std::endl;
+                // std::cout<< "start: " << start.x << ", " << start.y << std::endl;
             // }
 
             std::vector<Point> path = WaStar(grid_no_constraint.occupancy_grid, start, root_goal, 1.0);
@@ -126,6 +127,7 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
                 }
 
                 root_paths_to_tunnel_groups_[group.first].push_back(root_path);
+                std::cout<< "root_path.region_covered_by_root_path size: " << root_path.region_covered_by_root_path.size() << std::endl;
                 region_to_cover.erase(
                 std::remove_if(region_to_cover.begin(), region_to_cover.end(),
                     [&](const Point& p) {
@@ -146,6 +148,8 @@ void ReachConstraint::findRootPathsFromTunnelGroups() {
     for(const auto& group : intermediate_goal_regions_per_tunnel_group_){
         int root_path_number = 0;
         std::vector<Point> region_to_cover = group.second.intermediate_goal_region;
+        std::cout<< "passed thriugh this point 2" << std::endl;
+        std::cout<< "region_to_cover size: 2  " << region_to_cover.size() << std::endl;
         while(!region_to_cover.empty()) {
             auto it = region_to_cover.begin();
             std::advance(it, rand() % region_to_cover.size());
