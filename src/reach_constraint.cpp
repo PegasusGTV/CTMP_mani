@@ -90,9 +90,9 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
             // }
 
             std::vector<Point> path = WaStar(grid_no_constraint.occupancy_grid, start, root_goal, 1.0);
-            if(!path.empty()) {
-                std::cout<< "path size: " << path.size() << std::endl;
-            }
+            // if(!path.empty()) {
+            //     std::cout<< "path size: " << path.size() << std::endl;
+            // }
             if( !path.empty()) {
                 RootPathtoTunnelGroup root_path;
                 root_path.id = root_path_number++;
