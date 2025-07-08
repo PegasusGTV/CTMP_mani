@@ -42,14 +42,25 @@ void ReachConstraint::findIntermediateGoalRegions(std::vector<Tunnel> tunnels,
 
     t_bound_1_ = t_bound_1;
     t_bound_2_ = t_bound_2;
+
+    std::cout << "Intermediate goal regions per tunnel: " << intermediate_goal_regions_per_tunnel_.size() << std::endl;
+    std::cout << "Intermediate goal regions per tunnel group: " << intermediate_goal_regions_per_tunnel_group_.size() << std::endl;
+    std::cout << "Tunnels: " << tunnels_.size() << std::endl;
 }
 
 void ReachConstraint::findRootPathsToTunnelGroups() {
     // Implementation to find root paths to tunnel groups
+    std::cout<< intermediate_goal_regions_per_tunnel_group_.size() << std::endl;
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     for(const auto& group : intermediate_goal_regions_per_tunnel_group_){
         int root_path_number = 0;
+        
         std::vector<Point> region_to_cover = group.second.intermediate_goal_region;
+        if(root_path_number == 0){
+            std::cout<< "passed thriugh this point" << std::endl;
+            std::cout<< "region_to_cover size: " << region_to_cover.size() << std::endl;
+        }
+
         while(!region_to_cover.empty()) {
             auto it = region_to_cover.begin();
             std::advance(it, rand() % region_to_cover.size());

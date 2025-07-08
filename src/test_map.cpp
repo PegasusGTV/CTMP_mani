@@ -28,21 +28,27 @@ int main() {
     TunnelPreprocessor pre(env);
     pre.findTunnels();
     pre.groupTunnels();
-    pre.solveTunnelConstraints();\
+    pre.solveTunnelConstraints();
     // pre.saveTunnelsToFile(out_bin);
+
+    ReachConstraint rc(env);
+    rc.findIntermediateGoalRegions(pre.tunnels_, pre.tunnel_groups_, 2, 2);  // Adjust t_bounds as needed
+    std::cout<<"part 1"<<"\n";
+    rc.findRootPathsToTunnelGroups();
+    std::cout<<"part 2"<<"\n";
 
     // 3) Print discovered tunnels
     const auto &tunnels = pre.getTunnels();
     const auto &path = pre.paths_to_solve_tunnel_constraints_;
-    std::cout << "Discovered " << tunnels.size() << " tunnels:\n";
-    for (auto &t : tunnels) {
-      std::cout << "  Tunnel #" << t.id
-                << "  length=" << t.points.size() << " cells\n";
-    }
+    // std::cout << "Discovered " << tunnels.size() << " tunnels:\n";
+    // for (auto &t : tunnels) {
+    //   std::cout << "  Tunnel #" << t.id
+    //             << "  length=" << t.points.size() << " cells\n";
+    // }
 
-    std::cout<< "number of tunnel groups: " << pre.num_tunnels_in_group_ << "\n";
-    std::cout<< "number of tunnels: " << pre.num_tunnels_ << "\n";
-    std::cout<< "number of tunnel groups: " << pre.num_tunnel_groups_ << "\n";
+    // std::cout<< "number of tunnel groups: " << pre.num_tunnels_in_group_ << "\n";
+    // std::cout<< "number of tunnels: " << pre.num_tunnels_ << "\n";
+    // std::cout<< "number of tunnel groups: " << pre.num_tunnel_groups_ << "\n";
 
     // 4) Save to disk
     if (!pre.saveTunnelsToFile(out_bin)) {
@@ -51,47 +57,47 @@ int main() {
     std::cout << "Saved tunnel data to '" << out_bin << "'.\n";
 
 
-    {
-      json j;
-      j["map"] = {
-        {"width",  env.x_length},
-        {"height", env.y_length},
-        {"start", {{"x", env.start.first}, {"y", env.start.second}}},
-        {"goal",  {{"x", env.goal.first},  {"y", env.goal.second}}}
-      };
-      j["tunnels"] = json::array();
-      for (auto const &t : tunnels) {
-        json tj;
-        tj["id"]     = t.id;
-        tj["points"] = json::array();
-        for (auto const &p : t.points) {
-          tj["points"].push_back({{"x", p.x}, {"y", p.y}});
-        }
-        j["tunnels"].push_back(std::move(tj));
-      }
+    // {
+    //   json j;
+    //   j["map"] = {
+    //     {"width",  env.x_length},
+    //     {"height", env.y_length},
+    //     {"start", {{"x", env.start.first}, {"y", env.start.second}}},
+    //     {"goal",  {{"x", env.goal.first},  {"y", env.goal.second}}}
+    //   };
+    //   j["tunnels"] = json::array();
+    //   for (auto const &t : tunnels) {
+    //     json tj;
+    //     tj["id"]     = t.id;
+    //     tj["points"] = json::array();
+    //     for (auto const &p : t.points) {
+    //       tj["points"].push_back({{"x", p.x}, {"y", p.y}});
+    //     }
+    //     j["tunnels"].push_back(std::move(tj));
+    //   }
 
-      j["paths"] = json::array();
-      for (auto const & kv : path)
-      {
-      const auto & path_struct = kv.second;
-      json pj;
-      pj["id"]     = path_struct.id;
-      pj["points"] = json::array();
-      for (auto const & p : path_struct.path)
-      {
-          pj["points"].push_back({
-          { "x", p.x },
-          { "y", p.y }
-          });
-      }
-      j["paths"].push_back(std::move(pj));
-      }
+    //   j["paths"] = json::array();
+    //   for (auto const & kv : path)
+    //   {
+    //   const auto & path_struct = kv.second;
+    //   json pj;
+    //   pj["id"]     = path_struct.id;
+    //   pj["points"] = json::array();
+    //   for (auto const & p : path_struct.path)
+    //   {
+    //       pj["points"].push_back({
+    //       { "x", p.x },
+    //       { "y", p.y }
+    //       });
+    //   }
+    //   j["paths"].push_back(std::move(pj));
+    //   }
 
-      std::ofstream ofs(out_json);
-      if (!ofs) throw std::runtime_error("Could not open " + out_json);
-      ofs << j.dump(2) << std::endl;
-      std::cout << "Also wrote tunnels JSON to '" << out_json << "'.\n";
-    }
+    //   std::ofstream ofs(out_json);
+    //   if (!ofs) throw std::runtime_error("Could not open " + out_json);
+    //   ofs << j.dump(2) << std::endl;
+    //   std::cout << "Also wrote tunnels JSON to '" << out_json << "'.\n";
+    // }
 
     // 5) Reload and verify
     TunnelPreprocessor reloaded(env);

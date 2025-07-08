@@ -26,13 +26,16 @@ plt.ylabel("y")
 #     ys = [p["y"] for p in t["points"]]
 #     # plt.plot(xs, ys, '-o', label=f"tunnel {t['id']}")
 #     plt.plot(xs, ys, '-o')
-
+count = 0
 for i, P in enumerate(data.get("paths", [])):
     xs = [pt["x"] for pt in P["points"]]
     ys = [pt["y"] for pt in P["points"]]
     label = "precomputed paths" if i==0 else None
     plt.plot(xs, ys, '-r', linewidth=0.5, label=label)
+    count += 1
 
+
+print(f"Number of precomputed paths: {count}")
 
 # for P in data.get("paths", []):
 #     xs = [pt["x"] for pt in P["points"]]
