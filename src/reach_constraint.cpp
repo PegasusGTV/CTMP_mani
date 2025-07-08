@@ -7,11 +7,28 @@ void ReachConstraint::findIntermediateGoalRegions(std::vector<Tunnel> tunnels,
                                     std::map<int, TunnelGroup> tunnel_groups,
                                 double t_bound_1, double t_bound_2) {
     // Implementation to find intermediate goal regions per tunnel
+    std::cout<< map_.constraint_zone[0] << ", " << map_.constraint_zone[1] << std::endl;
     for (int x = map_.constraint_zone[0]; x <= map_.constraint_zone[1]; ++x) {
         for (int y = 0; y < map_.occupancy_grid[0].size(); ++y) {
-            grid_no_constraint.occupancy_grid[x][y] = 0; // Mark as free
+            grid_no_constraint.occupancy_grid[y][x] = 0; // Mark as free
         }
     }
+
+    // for(int x = 0; x<grid_no_constraint.occupancy_grid.size(); ++x) {
+    //     for(int y = 0; y < grid_no_constraint.occupancy_grid[0].size(); ++y) {
+    //         std::cout<< grid_no_constraint.occupancy_grid[x][y] << ",";
+    //     }
+    //     std::cout<< std::endl;
+    // }
+    // int count = 0;
+    // for(int x = 0; x<grid_no_constraint.occupancy_grid.size(); ++x) {
+    //     for(int y = 0; y < grid_no_constraint.occupancy_grid[0].size(); ++y) {
+    //         count += grid_no_constraint.occupancy_grid[x][y];
+
+    //     }
+    //     std::cout<< "count: " << count << std::endl;
+    //     // std::cout<< std::endl;
+    // }
     std::vector<int> intermediate_goal_zone = map_.intermediate_goal_zone;
     int tunnel_width = map_.tunnel_width;
     tunnels_ = tunnels;
@@ -57,10 +74,10 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
         int root_path_number = 0;
         
         std::vector<Point> region_to_cover = group.second.intermediate_goal_region;
-        if(root_path_number == 0){
-            std::cout<< "passed thriugh this point" << std::endl;
-            std::cout<< "region_to_cover size: " << region_to_cover.size() << std::endl;
-        }
+        // if(root_path_number == 0){
+        //     std::cout<< "passed thriugh this point" << std::endl;
+        //     std::cout<< "region_to_cover size: " << region_to_cover.size() << std::endl;
+        // }
 
         while(!region_to_cover.empty()) {
             auto it = region_to_cover.begin();
