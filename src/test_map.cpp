@@ -13,7 +13,7 @@ int main() {
   const std::string map_txt  = "../maps/map.txt";
   const std::string map_meta = "../maps/map_meta.json";
   const std::string out_bin  = "../data/test_tunnels.dat";
-//   const std::string rc_file  = "../data/reach_constraint.dat";
+  const std::string rc_file  = "../data/reach_constraint.dat";
   const std::string out_json  = "../data/test_tunnels.json";
 
   try {
@@ -36,6 +36,8 @@ int main() {
     std::cout<<"part 1"<<"\n";
     rc.findRootPathsToTunnelGroups();
     std::cout<<"part 2"<<"\n";
+    rc.findRootPathsFromTunnelGroups();
+    std::cout<<"part 3"<<"\n";
 
     // 3) Print discovered tunnels
     const auto &tunnels = pre.getTunnels();
@@ -111,6 +113,21 @@ int main() {
     std::cout<< "number of tunnels: " << reloaded.num_tunnels_ << "\n";
     std::cout<< "number of tunnel groups: " << reloaded.num_tunnel_groups_ << "\n";
 
+
+
+
+
+    if (!rc.saveToFile(rc_file)) {
+      throw std::runtime_error("Failed to save ReachConstraint to " + rc_file);
+    }
+
+    ReachConstraint rc_reloaded(env);
+    if (!rc_reloaded.loadFromFile(rc_file)) {
+      throw std::runtime_error("Failed to load ReachConstraint from " + rc_file);
+    }
+
+    std::cout << "Reach constraints saved and reloaded successfully.\n";
+
     return 0;
   }
   catch (const std::exception &e) {
@@ -131,7 +148,7 @@ int main() {
 //   const std::string map_txt  = "../maps/map.txt";
 //   const std::string map_meta = "../maps/map_meta.json";
 //   const std::string out_bin  = "../data/test_tunnels.dat";
-//   const std::string rc_file  = "../data/reach_constraint.dat";
+  // const std::string rc_file  = "../data/reach_constraint.dat";
 
 //   try {
 //     // 1) Load the map
