@@ -12,7 +12,7 @@ void ReachConstraint::findIntermediateGoalRegions(std::vector<Tunnel> tunnels,
             grid_no_constraint.occupancy_grid[x][y] = 0; // Mark as free
         }
     }
-    std::vector<int> intermdiate_goal_zone = map_.intermediate_goal_zone;
+    std::vector<int> intermediate_goal_zone = map_.intermediate_goal_zone;
     int tunnel_width = map_.tunnel_width;
     tunnels_ = tunnels;
     tunnel_groups_ = tunnel_groups;
@@ -20,8 +20,8 @@ void ReachConstraint::findIntermediateGoalRegions(std::vector<Tunnel> tunnels,
         IntermediateGoalRegionperTunnel region;
         region.id = tunnel.id;
         region.tunnel = tunnel;
-        for (int i = intermdiate_goal_zone[0]; i <= intermdiate_goal_zone[1]; ++i) {
-            for(int j = tunnel.start.y - static_cast<int>(tunnel_width/2) - 1; j <= tunnel.start.y + tunnel_width/2; ++j) {
+        for (int i = intermediate_goal_zone[0]; i <= intermediate_goal_zone[1]; ++i) {
+            for(int j = tunnel.start.y - static_cast<int>(tunnel_width/2); j <= tunnel.start.y + static_cast<int>(tunnel_width/2); ++j) {
                 region.intermediate_goal_region.push_back(Point(i, j));
             }
         }
@@ -32,8 +32,8 @@ void ReachConstraint::findIntermediateGoalRegions(std::vector<Tunnel> tunnels,
         IntermediateGoalRegionperTunnelGroup region_group;
         region_group.id = group.first;
         region_group.tunnel_group_id = group.first;
-        for (int i = intermdiate_goal_zone[0]; i <= intermdiate_goal_zone[1]; ++i) {
-            for(int j = group.second.representative.start.y - tunnel_width - 1; j <= group.second.representative.start.y + tunnel_width; ++j) {
+        for (int i = intermediate_goal_zone[0]; i <= intermediate_goal_zone[1]; ++i) {
+            for(int j = group.second.representative.start.y - tunnel_width + 1; j <= group.second.representative.start.y + tunnel_width - 1; ++j) {
                 region_group.intermediate_goal_region.push_back(Point(i, j));
             }
         }
@@ -45,6 +45,7 @@ void ReachConstraint::findIntermediateGoalRegions(std::vector<Tunnel> tunnels,
 
     std::cout << "Intermediate goal regions per tunnel: " << intermediate_goal_regions_per_tunnel_.size() << std::endl;
     std::cout << "Intermediate goal regions per tunnel group: " << intermediate_goal_regions_per_tunnel_group_.size() << std::endl;
+    std::cout << "Intermediate goal points regions per tunnel group: " << intermediate_goal_regions_per_tunnel_group_[99].intermediate_goal_region.size() << std::endl;
     std::cout << "Tunnels: " << tunnels_.size() << std::endl;
 }
 
@@ -66,8 +67,15 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
             std::advance(it, rand() % region_to_cover.size());
             Point root_goal = *it;
             Point start(map_.start.first, map_.start.second);
+            // if(root_path_number == 0){
+            //     std::cout<< "root_goal: " << root_goal.x << ", " << root_goal.y << std::endl;
+            //     std::cout<< "start: " << start.x << ", " << start.y << std::endl;
+            // }
 
             std::vector<Point> path = WaStar(grid_no_constraint.occupancy_grid, start, root_goal, 1.0);
+            if(!path.empty()) {
+                std::cout<< "path size: " << path.size() << std::endl;
+            }
             if( !path.empty()) {
                 RootPathtoTunnelGroup root_path;
                 root_path.id = root_path_number++;
