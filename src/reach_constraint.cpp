@@ -47,13 +47,13 @@ void ReachConstraint::findIntermediateGoalRegions(std::vector<Tunnel> tunnels,
 
         intermediate_goal_regions_per_tunnel_[region.id] = region;
     }
-    
+
     for(const auto& group : tunnel_groups_) {
         IntermediateGoalRegionperTunnelGroup region_group;
         region_group.id = group.first;
         region_group.tunnel_group_id = group.first;
 
-        std::cout << "representative point: " << group.second.representative.start.x << "," << group.second.representative.start.y << std::endl;
+        // std::cout << "representative point: " << group.second.representative.start.x << "," << group.second.representative.start.y << std::endl;
         for (int i = intermediate_goal_zone[0]; i <= intermediate_goal_zone[1]; ++i) {
             for(int j = group.second.representative.start.y - tunnel_width + 1; j <= group.second.representative.start.y + tunnel_width - 1; ++j) {
                 region_group.intermediate_goal_region.push_back(Point(i, j));
@@ -75,16 +75,16 @@ void ReachConstraint::findIntermediateGoalRegions(std::vector<Tunnel> tunnels,
 
 void ReachConstraint::findRootPathsToTunnelGroups() {
     // Implementation to find root paths to tunnel groups
-    std::cout << "enter findRootPathsToTunnelGroups()\n" << std::flush;
-    std::cout<< intermediate_goal_regions_per_tunnel_group_.size() << std::endl;
+    // std::cout << "enter findRootPathsToTunnelGroups()\n" << std::flush;
+    // std::cout<< intermediate_goal_regions_per_tunnel_group_.size() << std::endl;
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     for(const auto& group : intermediate_goal_regions_per_tunnel_group_){
         int root_path_number = 0;
         
         std::vector<Point> region_to_cover = group.second.intermediate_goal_region;
         // if(root_path_number == 0){
-        std::cout<< "passed thriugh this point" << std::endl;
-        std::cout<< "region_to_cover size: " << region_to_cover.size() << std::endl;
+        // std::cout<< "passed thriugh this point" << std::endl;
+        // std::cout<< "region_to_cover size: " << region_to_cover.size() << std::endl;
         // }
 
         while(!region_to_cover.empty()) {
@@ -93,18 +93,18 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
             Point root_goal = *it;
             Point start(map_.start.first, map_.start.second);
             // if(root_path_number == 0){
-            std::cout<< "root_goal: " << root_goal.x << ", " << root_goal.y << std::endl;
-            std::cout<< "size of region_to_cover: " << region_to_cover.size() << std::endl;
+            // std::cout<< "root_goal: " << root_goal.x << ", " << root_goal.y << std::endl;
+            // std::cout<< "size of region_to_cover: " << region_to_cover.size() << std::endl;
                 // std::cout<< "start: " << start.x << ", " << start.y << std::endl;
             // }
 
             std::vector<Point> path = WaStar(grid_no_constraint.occupancy_grid, start, root_goal, 1.0);
-            std::cout<< "path size: " << path.size() << std::endl;
+            // std::cout<< "path size: " << path.size() << std::endl;
             // if(!path.empty()) {
             //     std::cout<< "path size: " << path.size() << std::endl;
             // }
             if( !path.empty()) {
-                std::cout << "reached inside \n" << std::flush;
+                // std::cout << "reached inside \n" << std::flush;
                 RootPathtoTunnelGroup root_path;
                 root_path.id = root_path_number++;
                 root_path.tunnel_group_id = group.first;
@@ -124,13 +124,13 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
 
                 root_path.region_covered_by_root_path.push_back(root_goal);
 
-                std::cout<< "pivot_point: " << pivot_point.x << ", " << pivot_point.y << std::endl;
+                // std::cout<< "pivot_point: " << pivot_point.x << ", " << pivot_point.y << std::endl;
 
                 for(auto const& region_point : region_to_cover){
                     auto start_time = std::chrono::high_resolution_clock::now();
-                    std::cout<< "region_point: " << region_point.x << ", " << region_point.y << std::endl;
+                    // std::cout<< "region_point: " << region_point.x << ", " << region_point.y << std::endl;
                     std::vector<Point> path_region = WaStar(grid_no_constraint.occupancy_grid, pivot_point, region_point, 2.0);
-                    std::cout<< "path_region size: " << path_region.size() << std::endl;
+                    // std::cout<< "path_region size: " << path_region.size() << std::endl;
                     auto end_time = std::chrono::high_resolution_clock::now();
                     std::chrono::duration<double> elapsed = end_time - start_time;
                     double planning_time = elapsed.count(); // seconds
@@ -138,11 +138,11 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
                     if(!path_region.empty() && planning_time < t_bound_1_) {
                         root_path.region_covered_by_root_path.push_back(region_point);
                     }
-                    std::cout<< "region_point: " << region_point.x << ", " << region_point.y << std::endl;  
+                    // std::cout<< "region_point: " << region_point.x << ", " << region_point.y << std::endl;  
                 }
 
                 root_paths_to_tunnel_groups_[group.first].push_back(root_path);
-                std::cout<< "root_path.region_covered_by_root_path size: " << root_path.region_covered_by_root_path.size() << std::endl;
+                // std::cout<< "root_path.region_covered_by_root_path size: " << root_path.region_covered_by_root_path.size() << std::endl;
                 region_to_cover.erase(
                 std::remove_if(region_to_cover.begin(), region_to_cover.end(),
                     [&](const Point& p) {
@@ -151,13 +151,13 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
                             != root_path.region_covered_by_root_path.end();
                     }),
                 region_to_cover.end());
-                std::cout << "exit  findRootPathsToTunnelGroups() 111 \n" << std::endl;
+                // std::cout << "exit  findRootPathsToTunnelGroups() 111 \n" << std::endl;
             }
-            std::cout << "exit  findRootPathsToTunnelGroups() 222 \n" << std::endl;
+            // std::cout << "exit  findRootPathsToTunnelGroups() 222 \n" << std::endl;
         }
-        std::cout << "exit  findRootPathsToTunnelGroups() 333 \n" << std::endl;
+        // std::cout << "exit  findRootPathsToTunnelGroups() 333 \n" << std::endl;
     }
-    std::cout << "exit  findRootPathsToTunnelGroups() 444 \n" << std::endl;
+    // std::cout << "exit  findRootPathsToTunnelGroups() 444 \n" << std::endl;
     
 }
 
@@ -175,8 +175,12 @@ void ReachConstraint::findRootPathsFromTunnelGroups() {
             Point root_start = *it;
             Point constraint_start = tunnel_groups_[group.second.tunnel_group_id].representative.start;
 
+            std::cout<< "root_start: " << root_start.x << ", " << root_start.y << std::endl;
+
             std::vector<Point> path = WaStar(grid_no_constraint.occupancy_grid, root_start, constraint_start, 1.0);
+            std::cout<< "path size: " << path.size() << std::endl;
             if(!path.empty()){
+                std::cout << "reached inside 2 \n" << std::flush;
                 RootPathFromTunnelGroup root_path;
                 root_path.id = root_path_number++;
                 root_path.tunnel_group_id = group.first;
@@ -185,11 +189,13 @@ void ReachConstraint::findRootPathsFromTunnelGroups() {
                 root_path.end = constraint_start;
                 root_path.t_bound_2 = t_bound_2_;
                 int perception_x = map_.intermediate_goal_zone[1] - perception_radius_;
+                std::cout<< "perception_x: " << perception_x << std::endl;
 
                 auto pivot = std::find_if(path.begin(), path.end(), [&](const Point& p) {
                     return p.x == perception_x;
                 });
                 Point pivot_point;
+                std::cout<< "pivot size: " << path.size() << std::endl;
 
                 if (pivot != path.end()) {
                     pivot_point = *pivot;
@@ -206,12 +212,14 @@ void ReachConstraint::findRootPathsFromTunnelGroups() {
                         pivot_point = *path.begin();
                     }
                 }
-
+                std::cout<< "pivot_point: " << pivot_point.x << ", " << pivot_point.y << std::endl;
                 root_path.region_covered_by_root_path.push_back(root_start);
 
                 for(auto const& region_point : region_to_cover){
                     auto start_time = std::chrono::high_resolution_clock::now();
+                    std::cout<< "region_point: " << region_point.x << ", " << region_point.y << std::endl;
                     std::vector<Point> path_region = WaStar(grid_no_constraint.occupancy_grid, pivot_point, region_point, 2.0);
+                    std::cout<< "path_region size: " << path_region.size() << std::endl;
                     auto end_time = std::chrono::high_resolution_clock::now();
                     std::chrono::duration<double> elapsed = end_time - start_time;
                     double planning_time = elapsed.count(); // seconds
@@ -220,7 +228,7 @@ void ReachConstraint::findRootPathsFromTunnelGroups() {
                         root_path.region_covered_by_root_path.push_back(region_point);
                     }  
                 }
-
+                std::cout<< "root_path.region_covered_by_root_path size: " << root_path.region_covered_by_root_path.size() << std::endl;
                 root_paths_from_tunnel_groups_[group.first].push_back(root_path);
                 region_to_cover.erase(
                 std::remove_if(region_to_cover.begin(), region_to_cover.end(),
@@ -230,9 +238,13 @@ void ReachConstraint::findRootPathsFromTunnelGroups() {
                             != root_path.region_covered_by_root_path.end();
                     }),
                 region_to_cover.end());
+                std::cout << "exit  findRootPathsFromTunnelGroups() 111 \n" << std::endl;
             }
+            std::cout << "exit  findRootPathsFromTunnelGroups() 222 \n" << std::endl;
         }
+        std::cout << "exit  findRootPathsFromTunnelGroups() 333 \n" << std::endl;
     }
+    std::cout << "exit  findRootPathsFromTunnelGroups() 444 \n" << std::endl;
 
 }
 

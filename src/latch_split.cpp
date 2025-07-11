@@ -297,7 +297,8 @@ void TunnelPreprocessor::groupTunnels(){
         for(int j = 0; j < num_tunnels_in_group_; ++j) {
             group.Tunnels.push_back(tunnels_[i * num_tunnels_in_group_ + j]);
         }
-        group.representative = group.Tunnels[static_cast<int>(num_tunnels_in_group_/2) + 1];
+        group.representative = group.Tunnels[static_cast<int>(num_tunnels_in_group_/2)];
+        // group.representative = group.Tunnels[0];
         tunnel_groups_[group.id] = group;
     }
 }
