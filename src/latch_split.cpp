@@ -275,7 +275,7 @@ void TunnelPreprocessor::findTunnels(){
     for(int i = 0; i < num_tunnels_; ++i) {
         Tunnel tunnel;
         tunnel.id = ids++;
-        tunnel.start = Point(x_start, i + static_cast<int>(tunnel_width/2) + 1);
+        tunnel.start = Point(x_start, i + static_cast<int>(tunnel_width/2));
         for(int z = i; z < i + tunnel_width; ++z) {
             for (int j = constraint_zone[0]; j <= constraint_zone[1]; ++j) {
                 // if (i + j < y_length) {
