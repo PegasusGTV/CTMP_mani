@@ -40,20 +40,27 @@ void ReachConstraint::findIntermediateGoalRegions(std::vector<Tunnel> tunnels,
         for (int i = intermediate_goal_zone[0]; i <= intermediate_goal_zone[1]; ++i) {
             for(int j = tunnel.start.y - static_cast<int>(tunnel_width/2); j <= tunnel.start.y + static_cast<int>(tunnel_width/2); ++j) {
                 region.intermediate_goal_region.push_back(Point(i, j));
+                // std::cout << "intermediate_goal_region: " << i << "," << j << "   ." ;
             }
         }
+        // std::cout << std::endl;
+
         intermediate_goal_regions_per_tunnel_[region.id] = region;
     }
-
+    
     for(const auto& group : tunnel_groups_) {
         IntermediateGoalRegionperTunnelGroup region_group;
         region_group.id = group.first;
         region_group.tunnel_group_id = group.first;
+
+        std::cout << "representative point: " << group.second.representative.start.x << "," << group.second.representative.start.y << std::endl;
         for (int i = intermediate_goal_zone[0]; i <= intermediate_goal_zone[1]; ++i) {
             for(int j = group.second.representative.start.y - tunnel_width + 1; j <= group.second.representative.start.y + tunnel_width - 1; ++j) {
                 region_group.intermediate_goal_region.push_back(Point(i, j));
+                // std::cout << i << "," << j << "   ." ;
             }
         }
+        // std::cout << std::endl;
         intermediate_goal_regions_per_tunnel_group_[region_group.id] = region_group;
     }
 
