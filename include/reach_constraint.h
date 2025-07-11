@@ -66,17 +66,32 @@ struct RootPathFromTunnelGroup{
     }
 };
 
+struct RootPathConstrainttoGoal{
+    int id;
+    int tunnel_group_id;
+    std::vector<Point> root_path;
+    Point start;
+    Point end;
+    double t_bound_3;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int /*version*/) {
+        ar & id & tunnel_group_id & root_path & start & end & t_bound_3;
+    }
+};
+
 class ReachConstraint {
 public:
     ReachConstraint(const Map& map);
 
     void findIntermediateGoalRegions(std::vector<Tunnel> tunnels, 
                                      std::map<int, TunnelGroup> tunnel_groups,
-                                    double t_bound_1, double t_bound_2);
+                                    double t_bound_1, double t_bound_2, double t_bound_3);
 
     void findRootPathsToTunnelGroups();
 
     void findRootPathsFromTunnelGroups();
+
+    void findRootPathsToGoal();
     // bool saveToFile(const std::string& filename) const {
     //     // Implementation to save reach constraints to file
     //     return true;
@@ -100,8 +115,10 @@ public:
     std::map<int, IntermediateGoalRegionperTunnelGroup> intermediate_goal_regions_per_tunnel_group_;
     double t_bound_1_;
     double t_bound_2_;
+    double t_bound_3_;
     std::map<int, std::vector<RootPathtoTunnelGroup>> root_paths_to_tunnel_groups_;
     std::map<int, std::vector<RootPathFromTunnelGroup>> root_paths_from_tunnel_groups_;
+    std::map<int, std::vector<RootPathConstrainttoGoal>> root_paths_to_goal_;
     // std::vector<IntermediateGoalRegionperTunnel> intermediate_goal_regions_;
     // std::vector<RootPathtoTunnelGroup> root_paths_to_tunnel_groups_;
     // std::vector<RootPathFromTunnelGroup> root_paths_from_tunnel_groups_;

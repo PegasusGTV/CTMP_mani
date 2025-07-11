@@ -32,12 +32,14 @@ int main() {
     // pre.saveTunnelsToFile(out_bin);
 
     ReachConstraint rc(env);
-    rc.findIntermediateGoalRegions(pre.tunnels_, pre.tunnel_groups_, 2, 2);  // Adjust t_bounds as needed
+    rc.findIntermediateGoalRegions(pre.tunnels_, pre.tunnel_groups_, 2, 2, 2);  // Adjust t_bounds as needed
     std::cout<<"part 1"<<"\n";
     rc.findRootPathsToTunnelGroups();
     std::cout<<"part 2"<<"\n";
     rc.findRootPathsFromTunnelGroups();
     std::cout<<"part 3"<<"\n";
+    rc.findRootPathsToGoal();
+    std::cout<<"part 4"<<"\n";
 
     // 3) Print discovered tunnels
     const auto &tunnels = pre.getTunnels();

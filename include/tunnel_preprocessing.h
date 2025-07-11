@@ -44,10 +44,11 @@ struct Tunnel {
     int id;
     std::vector<Point> points;
     Point start;
+    Point end;
 
     template<class Archive>
     void serialize(Archive & ar, const unsigned int /*version*/) {
-        ar & id & points & start;
+        ar & id & points & start & end;
     }
 };
 

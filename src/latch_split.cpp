@@ -283,6 +283,7 @@ void TunnelPreprocessor::findTunnels(){
                 // }
             }
         }
+        tunnel.end = tunnel.points.back();
         tunnels_.push_back(tunnel);
     }
 
