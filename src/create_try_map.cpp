@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <nlohmann/json.hpp>
 #include <random>
+#include <fstream>
 using json = nlohmann::json;
 
 int main(){
@@ -52,10 +53,45 @@ int main(){
     Point intermediate_goal_point(intermediate_goal_x, intermediate_goal_y);
 
 
+    json j;
+    j["map"] = {
+    {"width",  Online_map.x_length},
+    {"height", Online_map.y_length},
+    {"start",  {{"x", Online_map.start.first}, {"y", Online_map.start.second}}},
+    {"goal",   {{"x", Online_map.goal.first},  {"y", Online_map.goal.second}}}
+    };
+    // dump the *modified* grid
+    j["occupancy"] = json::array();
+    for(int y = 0; y < Online_map.y_length; ++y) {
+    j["occupancy"].push_back(json::array());
+    for(int x = 0; x < Online_map.x_length; ++x){
+        j["occupancy"][y].push_back(Online_map.occupancy_grid[y][x]);
+    }
+    }
 
+    // 2) Dump your tunnels as before
+    // j["tunnels"] = json::array();
+    // for (auto const &t : tunnels) {
+    // json tj;
+    // tj["id"]     = t.id;
+    // tj["points"] = json::array();
+    // for (auto const &p : t.points) {
+    //     tj["points"].push_back({{"x", p.x}, {"y", p.y}});
+    // }
+    // j["tunnels"].push_back(std::move(tj));
+    // }
 
+    // 3) And *now* serialize your new intermediate goal
+    j["intermediate_goal"] = {
+    {"x", intermediate_goal_x},
+    {"y", intermediate_goal_y}
+    };
 
-
+    // 4) Finally write it all out
+    std::ofstream ofs("./maps/online_data.json");
+    if(!ofs) throw std::runtime_error("couldn’t open online_data.json");
+    ofs << j.dump(2) << "\n";
+    std::cout << "Wrote map + goal + tunnels → online_data.json\n";
 
 
 }
