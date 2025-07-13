@@ -88,7 +88,7 @@ int main(){
     };
 
     // 4) Finally write it all out
-    std::ofstream ofs("./maps/online_data.json");
+    std::ofstream ofs("../maps/online_data.json");
     if(!ofs) throw std::runtime_error("couldn’t open online_data.json");
     ofs << j.dump(2) << "\n";
     std::cout << "Wrote map + goal + tunnels → online_data.json\n";
