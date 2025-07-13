@@ -1,4 +1,5 @@
 #include "env_map.h"
+#include "point.h"
 #include <iostream>
 #include <filesystem>
 #include <nlohmann/json.hpp>
@@ -41,7 +42,18 @@ int main(){
             Online_map.occupancy_grid[y][x] = 0; // Mark as free
         }
     }
-    
+
+    std::uniform_int_distribution<int> dist_y(tunnel_start, tunnel_end);
+    std::uniform_int_distribution<int> dist_x(intermediate_goal_start, intermediate_goal_end);
+
+    int intermediate_goal_x = dist_x(rng);
+    int intermediate_goal_y = dist_y(rng);
+
+    Point intermediate_goal_point(intermediate_goal_x, intermediate_goal_y);
+
+
+
+
 
 
 
