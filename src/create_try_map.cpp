@@ -10,6 +10,7 @@ using json = nlohmann::json;
 int main(){
     const std::string map_txt  = "../maps/map.txt";
     const std::string map_meta = "../maps/map_meta.json";
+    const std::string out_json  = "../maps/online_data.json";
 
     std::mt19937 rng(std::random_device{}());
 
@@ -88,7 +89,7 @@ int main(){
     };
 
     // 4) Finally write it all out
-    std::ofstream ofs("../maps/online_data.json");
+    std::ofstream ofs(out_json);
     if(!ofs) throw std::runtime_error("couldn’t open online_data.json");
     ofs << j.dump(2) << "\n";
     std::cout << "Wrote map + goal + tunnels → online_data.json\n";
