@@ -94,5 +94,7 @@ int main(){
     ofs << j.dump(2) << "\n";
     std::cout << "Wrote map + goal + tunnels → online_data.json\n";
 
+    return 0;
+
 
 }
