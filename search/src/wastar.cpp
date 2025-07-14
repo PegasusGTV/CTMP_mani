@@ -5,9 +5,9 @@ std::vector<Point> getNeighbors(const Point& point, const std::vector<std::vecto
     int directions[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // Right, Down, Left, Up
     for (const auto& dir : directions) {
         Point neighbor(point.x + dir[0], point.y + dir[1]);
-        if (neighbor.x >= 0 && neighbor.x < map.size() &&
-            neighbor.y >= 0 && neighbor.y < map[0].size() &&
-            map[neighbor.x][neighbor.y] == 0) { // Assuming 0 is walkable
+        if (neighbor.y >= 0 && neighbor.y < map.size() &&
+            neighbor.x >= 0 && neighbor.x < map[0].size() &&
+            map[neighbor.y][neighbor.x] == 0) { // Assuming 0 is walkable
             neighbors.push_back(neighbor);
         }
     }
