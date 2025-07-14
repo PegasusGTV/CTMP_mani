@@ -78,18 +78,29 @@ int main(){
 
     std::vector<Point> part_1 = rc.root_paths_to_tunnel_groups_[tunnel_group][0].pivot_path;
     Point to_intermediate_goal_pivot_point = rc.root_paths_to_tunnel_groups_[tunnel_group][0].pivot_point;
-    std::vector<Point> part_2 = WaStar(env.occupancy_grid, to_intermediate_goal_pivot_point, intermediate_goal_point, 1.0);
+    std::vector<Point> part_2 = WaStar(env.occupancy_grid, to_intermediate_goal_pivot_point, intermediate_goal_point, 2.0);
+
+    std::cout<< "to_intermediate_goal_pivot_point: " << to_intermediate_goal_pivot_point.x << ", " << to_intermediate_goal_pivot_point.y << "\n";
+    std::cout<< "intermediate_goal_point: " << intermediate_goal_point.x << ", " << intermediate_goal_point.y << "\n";
+
+
     std::vector<Point> part_4 = rc.root_paths_from_tunnel_groups_[tunnel_group][0].pivot_path;
     Point from_intermediate_goal_pivot_point = rc.root_paths_from_tunnel_groups_[tunnel_group][0].pivot_point;
     std::vector<Point> part_3 = WaStar(env.occupancy_grid, intermediate_goal_point, from_intermediate_goal_pivot_point, 1.0);
 
+    std::cout<< "from_intermediate_goal_pivot_point: " << from_intermediate_goal_pivot_point.x << ", " << from_intermediate_goal_pivot_point.y << "\n";
+
     std::vector<Point> final_path;
     final_path.insert(final_path.end(), part_1.begin(), part_1.end());
-    final_path.insert(final_path.end(), part_2.begin(), part_2.end());
-    final_path.insert(final_path.end(), part_3.begin(), part_3.end());
-    final_path.insert(final_path.end(), part_4.begin(), part_4.end());
-    final_path.insert(final_path.end(), part_5.begin(), part_5.end());
-    final_path.insert(final_path.end(), part_6.begin(), part_6.end());
+    // final_path.insert(final_path.end(), part_2.begin(), part_2.end());
+    // final_path.insert(final_path.end(), part_3.begin(), part_3.end());
+    // final_path.insert(final_path.end(), part_4.begin(), part_4.end());
+    // final_path.insert(final_path.end(), part_5.begin(), part_5.end());
+    // final_path.insert(final_path.end(), part_6.begin(), part_6.end());
+
+    std::cout << "Part 1 size: " << part_1.size() << "\n";
+    std::cout << "Part 2 size: " << part_2.size() << "\n";
+    std::cout << "Part 3 size: " << part_3.size() << "\n";
 
     std::ofstream path_out(final_path_file);
     if (!path_out) throw std::runtime_error("Could not open final_path.json for writing");
