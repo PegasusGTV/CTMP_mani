@@ -60,6 +60,21 @@ int main(){
     std::cout << "number of tunnel groups: " << rc.tunnel_groups_.size() << "\n";
     std::cout << "number of root paths to tunnel groups: " << rc.root_paths_to_tunnel_groups_.size() << "\n";
 
+    int x_for_tunnel_checking = env.constraint_zone[0];
+    int tunnel_number = 0;
+    for(int i = 0; i < env.y_length - env.tunnel_width + 1; i++){
+        if(env.occupancy_grid[i][x_for_tunnel_checking] == 0){
+            tunnel_number = i;
+            break;
+        }
+    }
+
+    int tunnel_group = static_cast<int>(tunnel_number / env.tunnel_width);
+
+    std::vector<Point> part_3 = pre.paths_to_solve_tunnel_constraints_[tunnel_group].path;
+
+    std::vector<Point> part_4 = rc.root_paths_from_tunnel_groups_[tunnel_group][0].root_path;
+
 
 
 
