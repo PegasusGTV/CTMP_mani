@@ -1,8 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/test_map.dir/src/load_map_preprocessing.cpp.o"
-  "CMakeFiles/test_map.dir/src/load_map_preprocessing.cpp.o.d"
   "CMakeFiles/test_map.dir/src/test_map.cpp.o"
-  "CMakeFiles/test_map.dir/src/test_map.cpp.o.d"
   "test_map"
   "test_map.pdb"
 )

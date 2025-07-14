@@ -50,7 +50,7 @@ struct RootPathtoTunnelGroup{
     double t_bound_1;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int /*version*/) {
-        ar & id & tunnel_group_id & root_path & region_covered_by_root_path & start & end & t_bound_1;
+        ar & id & tunnel_group_id & root_path & region_covered_by_root_path & pivot_path & pivot_point & start & end & t_bound_1;
     }
 };
 
@@ -66,7 +66,7 @@ struct RootPathFromTunnelGroup{
     double t_bound_2;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int /*version*/) {
-        ar & id & tunnel_group_id & root_path & region_covered_by_root_path & start & end & t_bound_2;
+        ar & id & tunnel_group_id & root_path & region_covered_by_root_path & pivot_path & pivot_point & start & end & t_bound_2;
     }
 };
 
