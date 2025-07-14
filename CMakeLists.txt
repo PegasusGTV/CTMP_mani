@@ -60,7 +60,7 @@ add_executable(create_try_map
 target_link_libraries(create_try_map PRIVATE ctmp_core)
 
 # ─── (OPTIONAL) other mains ──────────────────────────────────────────────────
-# add_executable(ctmp_mani
-#   src/your_real_main.cpp
-#)
-#target_link_libraries(ctmp_mani PRIVATE ctmp_core)
+add_executable(online_ctmp
+  src/online_ctmp.cpp
+)
+target_link_libraries(online_ctmp PRIVATE ctmp_core)

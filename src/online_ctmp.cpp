@@ -19,11 +19,25 @@ int main(){
 
     json test_map;
     jsonFile >> test_map;
-    env.occupancy_grid = test_map["map"]["occupancy_grid"].get<std::vector<std::vector<int>>>();
+    // env.occupancy_grid = test_map["map"]["occupancy_grid"].get<std::vector<std::vector<int>>>();
+    // std::cout << "Map loaded: "
+    //           << env.x_length << "×" << env.y_length
+    //           << "  start=(" << env.start.first  << "," << env.start.second << ")"
+    //           << "  goal =(" << env.goal.first   << "," << env.goal.second  << ")\n";
+    const auto& occ = test_map["occupancy"];
+    env.occupancy_grid.resize(env.y_length, std::vector<int>(env.x_length));
+    for (int y = 0; y < env.y_length; ++y) {
+        for (int x = 0; x < env.x_length; ++x) {
+            env.occupancy_grid[y][x] = occ[y][x];
+        }
+    }
+    // std::cout << "Occupancy grid loaded with size: "
+    //           << env.occupancy_grid.size() << " rows, "
+    //           << env.occupancy_grid[0].size() << " columns.\n";
 
     Point intermediate_goal_point(
-        test_map["map"]["intermediate_goal"][0],
-        test_map["map"]["intermediate_goal"][1]
+        test_map["intermediate_goal"]["x"],
+        test_map["intermediate_goal"]["y"]
     );
 
     TunnelPreprocessor pre(env);
