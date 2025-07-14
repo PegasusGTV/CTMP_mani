@@ -11,6 +11,7 @@ int main(){
     const std::string out_json  = "../maps/online_data.json";
     const std::string out_bin  = "../data/test_tunnels.dat";
     const std::string rc_file  = "../data/reach_constraint.dat";
+    const std::string final_path_file = "../data/final_path.json";
 
     Map env = loadMapFromFiles_preprocessing(map_txt, map_meta);
 
@@ -71,9 +72,37 @@ int main(){
 
     int tunnel_group = static_cast<int>(tunnel_number / env.tunnel_width);
 
-    std::vector<Point> part_3 = pre.paths_to_solve_tunnel_constraints_[tunnel_group].path;
+    std::vector<Point> part_5 = pre.paths_to_solve_tunnel_constraints_[tunnel_group].path;
 
-    std::vector<Point> part_4 = rc.root_paths_from_tunnel_groups_[tunnel_group][0].root_path;
+    std::vector<Point> part_6 = rc.root_paths_to_goal_[tunnel_group][0].root_path;
+
+    std::vector<Point> part_1 = rc.root_paths_to_tunnel_groups_[tunnel_group][0].pivot_path;
+    Point to_intermediate_goal_pivot_point = rc.root_paths_to_tunnel_groups_[tunnel_group][0].pivot_point;
+    std::vector<Point> part_2 = WaStar(env.occupancy_grid, to_intermediate_goal_pivot_point, intermediate_goal_point, 1.0);
+    std::vector<Point> part_4 = rc.root_paths_from_tunnel_groups_[tunnel_group][0].pivot_path;
+    Point from_intermediate_goal_pivot_point = rc.root_paths_from_tunnel_groups_[tunnel_group][0].pivot_point;
+    std::vector<Point> part_3 = WaStar(env.occupancy_grid, intermediate_goal_point, from_intermediate_goal_pivot_point, 1.0);
+
+    std::vector<Point> final_path;
+    final_path.insert(final_path.end(), part_1.begin(), part_1.end());
+    final_path.insert(final_path.end(), part_2.begin(), part_2.end());
+    final_path.insert(final_path.end(), part_3.begin(), part_3.end());
+    final_path.insert(final_path.end(), part_4.begin(), part_4.end());
+    final_path.insert(final_path.end(), part_5.begin(), part_5.end());
+    final_path.insert(final_path.end(), part_6.begin(), part_6.end());
+
+    std::ofstream path_out(final_path_file);
+    if (!path_out) throw std::runtime_error("Could not open final_path.json for writing");
+
+    json path_json = json::array();
+    for (const auto& p : final_path) {
+        path_json.push_back({{"x", p.x}, {"y", p.y}});
+    }
+
+    path_out << path_json.dump(2);  // pretty-print with 2-space indent
+    path_out.close();
+
+    std::cout << "Saved final path to ../data/final_path.json\n";
 
 
 
