@@ -43,6 +43,8 @@ struct RootPathtoTunnelGroup{
     int tunnel_group_id;
     std::vector<Point> root_path;
     std::vector<Point> region_covered_by_root_path;
+    std::vector<Point> pivot_path;
+    Point pivot_point;
     Point start;
     Point end;
     double t_bound_1;
@@ -57,6 +59,8 @@ struct RootPathFromTunnelGroup{
     int tunnel_group_id;
     std::vector<Point> root_path;
     std::vector<Point> region_covered_by_root_path;
+    std::vector<Point> pivot_path;
+    Point pivot_point;
     Point start;
     Point end;
     double t_bound_2;

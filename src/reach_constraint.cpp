@@ -142,6 +142,13 @@ void ReachConstraint::findRootPathsToTunnelGroups() {
                     // std::cout<< "region_point: " << region_point.x << ", " << region_point.y << std::endl;  
                 }
 
+                // root_paths_to_tunnel_groups_[group.first].push_back(root_path);
+
+                std::vector<Point> pivot_path = WaStar(grid_no_constraint.occupancy_grid, start, pivot_point, 1.0);
+
+                root_path.pivot_path = pivot_path;
+                root_path.pivot_point = pivot_point;
+
                 root_paths_to_tunnel_groups_[group.first].push_back(root_path);
                 // std::cout<< "root_path.region_covered_by_root_path size: " << root_path.region_covered_by_root_path.size() << std::endl;
                 region_to_cover.erase(
@@ -219,7 +226,7 @@ void ReachConstraint::findRootPathsFromTunnelGroups() {
                 for(auto const& region_point : region_to_cover){
                     auto start_time = std::chrono::high_resolution_clock::now();
                     // std::cout<< "region_point: " << region_point.x << ", " << region_point.y << std::endl;
-                    std::vector<Point> path_region = WaStar(grid_no_constraint.occupancy_grid, pivot_point, region_point, 2.0);
+                    std::vector<Point> path_region = WaStar(grid_no_constraint.occupancy_grid,region_point,  pivot_point, 2.0);
                     // std::cout<< "path_region size: " << path_region.size() << std::endl;
                     auto end_time = std::chrono::high_resolution_clock::now();
                     std::chrono::duration<double> elapsed = end_time - start_time;
@@ -230,6 +237,12 @@ void ReachConstraint::findRootPathsFromTunnelGroups() {
                     }  
                 }
                 // std::cout<< "root_path.region_covered_by_root_path size: " << root_path.region_covered_by_root_path.size() << std::endl;
+
+                std::vector<Point> pivot_path = WaStar(grid_no_constraint.occupancy_grid, pivot_point, constraint_start, 1.0);
+
+                root_path.pivot_path = pivot_path;
+                root_path.pivot_point = pivot_point;
+
                 root_paths_from_tunnel_groups_[group.first].push_back(root_path);
                 region_to_cover.erase(
                 std::remove_if(region_to_cover.begin(), region_to_cover.end(),
