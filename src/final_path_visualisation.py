@@ -33,10 +33,12 @@
 
 
 
-
+# import matplotlib
+# matplotlib.use('Agg')
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+# from matplotlib.animation import FFMpegWriter
 import json
 
 # 1. Load map and path data
@@ -45,6 +47,7 @@ with open("../maps/online_data.json", "r") as f:
 
 with open("../data/final_path.json", "r") as f:
     path = json.load(f)
+
 
 # 2. Extract occupancy grid
 world = np.array(data["occupancy"])
@@ -80,13 +83,17 @@ def init():
     return line, point
 
 def update(i):
-    line.set_data(px[:i+1], py[:i+1])
-    point.set_data(px[i], py[i])
+    line.set_data([px[:i+1]], [py[:i+1]])
+    point.set_data([px[i]], [py[i]])
     return line, point
 
-ani = animation.FuncAnimation(fig, update, frames=len(px), init_func=init, blit=True, interval=50)
-# ani.save("../Results/path_animation1.mp4", fps=30, dpi=150)
+
+ani = animation.FuncAnimation(fig, update, frames=len(px), init_func=init, blit=True, interval=10)
+
 plt.show()
 
+# writer = FFMpegWriter(fps=30, metadata=dict(artist='Gopal'), bitrate=1800)
+
+ani.save("../Results/path_animation_map_1.gif", writer='pillow', dpi=150)
 
 
